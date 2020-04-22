@@ -36,7 +36,7 @@ namespace BC_Solution
         }
 
         [SerializeField]
-        ClockReference clockReference;
+        ClockMonoReference clockReference;
 
         [SerializeField]
         UnityEvent OnClock;

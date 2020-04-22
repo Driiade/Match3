@@ -29,7 +29,7 @@ namespace BC_Solution
         new Rigidbody2D rigidbody2D;
 
         [SerializeField]
-        ClockReference clockProvider;
+        ClockMonoReference clockProvider;
 
         private float lastTimeScale = 1f;
         private Vector2 lastVelocity;

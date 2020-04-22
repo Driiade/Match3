@@ -27,13 +27,16 @@ namespace BC_Solution
     /// <summary>
     /// Get a clock by string reference
     /// </summary>
-    public class ClockReference : MonoBehaviour, IClockProvider, IAwakable
+    public class ClockMonoReference : MonoBehaviour, IClock, IAwakable
     {
 
         [SerializeField]
         string clockType = "Gameplay";
 
-        private Clock cachedClock;
+        private ClockMono cachedClock;
+
+        public float CurrentFixedTime { get => cachedClock.CurrentFixedTime; set => cachedClock.CurrentFixedTime = value; }
+        public float CurrentRenderTime { get => cachedClock.CurrentRenderTime; set => cachedClock.CurrentRenderTime = value; }
 
         private void RefreshCachedClock()
         {
@@ -48,7 +51,7 @@ namespace BC_Solution
             cachedClock = clockSystem.GetClock(clockType);
         }
 
-        public Clock GetClock()
+        public ClockMono GetClock()
         {
             if (!cachedClock)
                 RefreshCachedClock();

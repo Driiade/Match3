@@ -25,7 +25,7 @@ using UnityEngine;
 
 namespace BC_Solution
 {
-    public class Clock : MonoBehaviour, IClockProvider
+    public class ClockMono : MonoBehaviour, IClock
     {
         [SerializeField]
         string clockType;
@@ -69,12 +69,12 @@ namespace BC_Solution
 #if !UNITY_EDITOR
     [System.NonSerialized]
 #endif
-        public Clock clockParent;
+        public ClockMono clockParent;
 
 #if !UNITY_EDITOR
     [System.NonSerialized]
 #endif
-        public List<Clock> clocks = new List<Clock>();
+        public List<ClockMono> clocks = new List<ClockMono>();
 
 
         private float deltaFixedTime = 0f;
@@ -111,7 +111,7 @@ namespace BC_Solution
 
         private Coroutine bulletTimeCoroutine;
 
-        public Clock GetClock()
+        public ClockMono GetClock()
         {
             return this;
         }

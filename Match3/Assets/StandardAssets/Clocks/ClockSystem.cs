@@ -25,18 +25,18 @@ using UnityEngine;
 
 namespace BC_Solution
 {
-    public class ClockSystem : MonoSystem<Clock>, IPhysicsSimulated
+    public class ClockSystem : MonoSystem<ClockMono>, IPhysicsSimulated
     {
         public int priority => 0;
 
-        List<Clock> rootClocks = new List<Clock>();
+        List<ClockMono> rootClocks = new List<ClockMono>();
 
-        Dictionary<string, Clock> typedClocks = new Dictionary<string, Clock>();
+        Dictionary<string, ClockMono> typedClocks = new Dictionary<string, ClockMono>();
 
         private void Update()
         {
             float deltaTime = Time.deltaTime;
-            foreach (Clock clock in rootClocks)
+            foreach (ClockMono clock in rootClocks)
             {
                 clock.UpdateRenderTime(deltaTime);
             }
@@ -55,14 +55,14 @@ namespace BC_Solution
         public void IFixedUpdate()
         {
             float deltaTime = Time.fixedDeltaTime;
-            foreach (Clock clock in rootClocks)
+            foreach (ClockMono clock in rootClocks)
             {
                 clock.UpdateFixedTime(deltaTime);
             }
         }
 
 
-        public override void OnNewEntities(Clock[] entities)
+        public override void OnNewEntities(ClockMono[] entities)
         {
             base.OnNewEntities(entities);
             RebuildClockHierarchy();
@@ -73,7 +73,7 @@ namespace BC_Solution
             RebuildClockHierarchy();
         }
 
-        public Clock GetClock(string clockType)
+        public ClockMono GetClock(string clockType)
         {
 #if UNITY_EDITOR || DEBUG
             if (!typedClocks.ContainsKey(clockType))
@@ -90,7 +90,7 @@ namespace BC_Solution
             rootClocks.Clear();
             typedClocks.Clear();
 
-            foreach (Clock clock in entities)
+            foreach (ClockMono clock in entities)
             {
                 clock.clocks.Clear();
 
@@ -103,7 +103,7 @@ namespace BC_Solution
                     typedClocks.Add(clock.ClockType, clock);
             }
 
-            foreach (Clock clock in entities)
+            foreach (ClockMono clock in entities)
             {
                 if (!string.IsNullOrEmpty(clock.UnderClockType))
                 {
@@ -111,15 +111,15 @@ namespace BC_Solution
                 }
             }
 
-            foreach (Clock clock in rootClocks)
+            foreach (ClockMono clock in rootClocks)
             {
                 clock.UpdateTimeScale(1f);
             }
         }
 
-        private void PlaceClock(Clock c, Dictionary<string, Clock> typedClocks)
+        private void PlaceClock(ClockMono c, Dictionary<string, ClockMono> typedClocks)
         {
-            if (typedClocks.TryGetValue(c.UnderClockType, out Clock root))
+            if (typedClocks.TryGetValue(c.UnderClockType, out ClockMono root))
             {
                 c.clockParent = root;
                 root.clocks.Add(c);

@@ -1,4 +1,4 @@
-/*Copyright(c) <2017> <Benoit Constantin ( France ) >
+﻿/*Copyright(c) <2017> <Benoit Constantin ( France ) >
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,12 +19,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. 
 */
 
+
+using UnityEngine;
+
 namespace BC_Solution
 {
-    public interface IClockProvider 
+    public abstract class AbstractClockMono : MonoBehaviour, IClock
     {
-        Clock GetClock();
-        void SetClockTime(float time);
-        void BulletTime(BulletTimeScriptableObject bulletTime);
+        public abstract float CurrentFixedTime { get; set; }
+        public abstract float CurrentRenderTime { get; set; }
+
+        public abstract void BulletTime(BulletTimeScriptableObject bulletTime);
+        public abstract void SetClockTime(float time);
     }
 }
