@@ -170,13 +170,14 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         List<Piece> piecesToMove = new List<Piece>();
 
         float yVelocity;
-        float timer;
+        bool allPiecesFall = false;
 
         public float gravity = -9.18f;
 
         public override void OnEnter(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = (Grid)statedMono;
+            allPiecesFall = false;
             missingPosition = grid.frameDataBuffer.GetLast<MessageData<List<Vector2>>>((x) => x.message == "GeneratePieces").obj;
             piecesToMove.Clear();
 
@@ -212,8 +213,7 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
                     piecesToMove.Add(grid.gridPieces[i][j]);
                 }
             }
-
-            timer = grid.clock.CurrentRenderTime + 0.75f; //We can calculate how many time pieces fall with physics, but nervermind
+          
             yVelocity = 0f;
         }
 
@@ -228,24 +228,26 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
             }
         }
 
+
         public override void OnUpdate(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = (Grid)statedMono;
 
-            if (timer < grid.clock.CurrentRenderTime) //Yeah, one turn !
+            if (allPiecesFall) //Yeah, one turn !
             {
                 grid.SwitchTo(GridStateEnum.WAITING_FOR_INPUT);
                 return;
             }
 
 
-                float deltaTime = grid.clock.DeltaRenderTime;
+            float deltaTime = grid.clock.DeltaRenderTime;
             float gt = gravity * deltaTime;
             yVelocity += gt;
             gt *= 0.5f*deltaTime;
 
             float deltaPosition = yVelocity * deltaTime + gt; //Cache this
 
+            bool stillFalling = false;
             foreach (var p in piecesToMove)
             {
                 Vector2 targetPosition = p.PhysicsPosition;
@@ -253,11 +255,17 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
 
                 p.ViewPosition = new Vector2(p.ViewPosition.x, Mathf.Max(targetPosition.y, p.ViewPosition.y + deltaPosition));
 
+                if (!stillFalling && p.ViewPosition.y - targetPosition.y >= 0.01f)
+                    stillFalling = true;
+
                 if (p.ViewPosition.y > grid.ViewPosition.y + 0.5f)
                     p.gameObject.SetActive(false);
                 else
                     p.gameObject.SetActive(true);
             }
+
+            if (!stillFalling)
+                allPiecesFall = true;
         }
     }
 
@@ -349,8 +357,6 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
     //Helper to place a piece in the grid
     public void InterChange(Piece p1, Piece p2)
     {
-        Debug.Log(p1.PhysicsPosition + "______" + p2.PhysicsPosition);
-
         gridPieces[(int)p1.PhysicsPosition.x][(int)p1.PhysicsPosition.y] = p2;                          //Just place them in the right place in the array. View position will be placed later.
         gridPieces[(int)p2.PhysicsPosition.x][(int)p2.PhysicsPosition.y] = p1;
 
