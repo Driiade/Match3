@@ -28,9 +28,7 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
             {
                 for (int j = 0; j < grid.size.y; j++)
                 {
-                    GameObject go = grid.piecePools[Random.Range(0, grid.piecePools.Length)].objectPool.GetFromPool();
-                    grid.gridPieces[i][j] = go.GetComponent<Piece>();
-                    grid.gridPieces[i][j].gameObject.SetActive(false);
+                    grid.Populate(i, j);
                 }
             }
 
@@ -44,7 +42,7 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
             {
                 for (int j = 0; j < grid.size.y; j++)
                 {
-                    grid.gridPieces[i][j].PhysicsPosition = new Vector3(i, -j, grid.PhysicsPosition.z); //Starting to left top
+                    grid.gridPieces[i][j].ViewPosition = new Vector3(i, -j, grid.ViewPosition.z); //Starting to left top
                 }
             }
         }
@@ -58,21 +56,24 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
             Grid grid = (Grid)statedMono;
             float deltaTime = grid.clock.CurrentRenderTime - startTime;
 
+            if (deltaTime > 2f)
+            {
+                grid.SwitchTo(GridStateEnum.WAITING_FOR_INPUT);
+                return;
+            }
+
             for (int i = 0; i < grid.size.x; i++)
             {
                 for (int j = 0; j < grid.size.y; j++)
                 {
-                    grid.gridPieces[i][j].PhysicsPosition = new Vector3(i, Mathf.Max(-j, -j + 6f *Mathf.Sin(i*0.2f) - deltaTime * 10f + grid.size.y), grid.PhysicsPosition.z); //Starting to left top
+                    grid.gridPieces[i][j].ViewPosition = new Vector3(i, Mathf.Max(-j, -j + 6f *Mathf.Sin(i*0.2f) - deltaTime * 10f + grid.size.y), grid.ViewPosition.z); //Starting to left top
 
-                    if (grid.gridPieces[i][j].PhysicsPosition.y > grid.PhysicsPosition.y + 0.5f)
+                    if (grid.gridPieces[i][j].ViewPosition.y > grid.ViewPosition.y + 0.5f)
                         grid.gridPieces[i][j].gameObject.SetActive(false);
                     else
                         grid.gridPieces[i][j].gameObject.SetActive(true);
                 }
             }
-
-            if (deltaTime > 2f)
-                grid.SwitchTo(GridStateEnum.WAITING_FOR_INPUT);
         }
     }
 
@@ -91,24 +92,25 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         public override void OnUpdate(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = statedMono as Grid;
-            List<Piece> connections = grid.GetFirstPiecesConnection(3);
-            if (connections != null)
-            {
-                grid.frameDataBuffer.AddData(new MessageData<List<Piece>>("DeletePieces", connections));
-            }
-
 
             //Gestion state by message
-            if(grid.frameDataBuffer.Exists<MessageData<Vector2>>((x)=>x.message == "Generate" ))
+            if (grid.frameDataBuffer.Exists<MessageData<Vector2>>((x) => x.message == "Generate"))
             {
                 grid.SwitchTo(GridStateEnum.GENERATING_PIECES);
                 return;
             }
 
-            if(grid.frameDataBuffer.Exists<MessageData<List<Piece>>>((x) => x.message == "DeletePieces"))
+            if (grid.frameDataBuffer.Exists<MessageData<List<Piece>>>((x) => x.message == "DeletePieces"))
             {
                 grid.SwitchTo(GridStateEnum.DELETING_PIECES);
                 return;
+            }
+
+            List<Piece> connections = grid.GetFirstPiecesConnection(3);
+            if (connections != null)
+            {
+                grid.frameDataBuffer.AddData(new MessageData<List<Piece>>("DeletePieces", connections));
+                return; //no player input authorized
             }
         }
     }
@@ -123,7 +125,7 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         {
             Grid grid = (Grid)statedMono;
             pieceToDestroy = grid.frameDataBuffer.GetLast<MessageData<List<Piece>>>((x) => x.message == "DeletePieces").obj;
-            timer = grid.clock.CurrentRenderTime + 2f;
+            timer = grid.clock.CurrentRenderTime + 0.5f;
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)
@@ -134,12 +136,127 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         public override void OnUpdate(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = (Grid)statedMono;
-            if (grid.clock.CurrentRenderTime> timer)
+
+            if (grid.frameDataBuffer.Exists<MessageData<List<Vector2>>>((x) => x.message == "GeneratePieces"))
             {
-                for (int i = 0; i < pieceToDestroy.Count; i++)
+                grid.SwitchTo(GridStateEnum.GENERATING_NEW_PIECES);
+                return;
+            }
+
+
+            if (pieceToDestroy.Count > 0)
+            {
+                if (grid.clock.CurrentRenderTime > timer)
                 {
-                    pieceToDestroy[i].GetComponent<PooledElement>().Pool();
+                    List<Vector2> positions = new List<Vector2>(pieceToDestroy.Count);
+                    for (int i = 0; i < pieceToDestroy.Count; i++)
+                    {
+                        pieceToDestroy[i].GetComponent<PooledElement>().Pool();
+                        positions.Add(pieceToDestroy[i].PhysicsPosition);
+                    }
+
+                    pieceToDestroy.Clear();
+
+                    grid.frameDataBuffer.AddData(new MessageData<List<Vector2>>("GeneratePieces", positions));
                 }
+            }
+
+        }
+    }
+
+    public class GeneratingNewPieces : State
+    {
+        List<Vector2> missingPosition;
+        List<Piece> piecesToMove = new List<Piece>();
+
+        float yVelocity;
+        float timer;
+
+        public float gravity = -9.18f;
+
+        public override void OnEnter(StatedMono<GridStateEnum> statedMono)
+        {
+            Grid grid = (Grid)statedMono;
+            missingPosition = grid.frameDataBuffer.GetLast<MessageData<List<Vector2>>>((x) => x.message == "GeneratePieces").obj;
+            piecesToMove.Clear();
+
+            //Ok now count what is missing per column
+            int[] missingPiecePerColumn = new int[(int)grid.size.x];
+            int[] maxYPerColumn = new int[(int)grid.size.x];
+
+            for (int i = 0; i < missingPosition.Count; i++)
+            {
+                int x = (int)missingPosition[i].x;
+                missingPiecePerColumn[x]+=1;
+                maxYPerColumn[x] = Mathf.Max(maxYPerColumn[x], (int)missingPosition[i].y);
+            }
+
+
+
+            for (int i = 0; i < missingPiecePerColumn.Length; i++)  //Just place them in the right place in the array. View position will be placed later.
+            {
+                int maxY = maxYPerColumn[i];
+                for (int k = 0; k < missingPiecePerColumn[i]; k++)
+                {
+                    for (int j = maxY; j >= 1; j--)
+                    {
+                        grid.InterChange(grid.gridPieces[i][j - 1], grid.gridPieces[i][j]);
+                    }
+
+                    Piece p = grid.Populate(i, 0);
+                    p.ViewPosition = new Vector2(i, (k + 1));
+                }
+
+                for (int j = 0; j < maxYPerColumn[i]+1; j++)
+                {
+                    piecesToMove.Add(grid.gridPieces[i][j]);
+                }
+            }
+
+            timer = grid.clock.CurrentRenderTime + 0.75f; //We can calculate how many time pieces fall with physics, but nervermind
+            yVelocity = 0f;
+        }
+
+        public override void OnExit(StatedMono<GridStateEnum> statedMono)
+        {
+            //Just replace all pieces, jsut in case
+            Grid grid = (Grid)statedMono;
+            foreach (var item in piecesToMove)
+            {
+                item.ViewPosition = new Vector2(item.PhysicsPosition.x, -item.PhysicsPosition.y);
+                item.gameObject.SetActive(true);
+            }
+        }
+
+        public override void OnUpdate(StatedMono<GridStateEnum> statedMono)
+        {
+            Grid grid = (Grid)statedMono;
+
+            if (timer < grid.clock.CurrentRenderTime) //Yeah, one turn !
+            {
+                grid.SwitchTo(GridStateEnum.WAITING_FOR_INPUT);
+                return;
+            }
+
+
+                float deltaTime = grid.clock.DeltaRenderTime;
+            float gt = gravity * deltaTime;
+            yVelocity += gt;
+            gt *= 0.5f*deltaTime;
+
+            float deltaPosition = yVelocity * deltaTime + gt; //Cache this
+
+            foreach (var p in piecesToMove)
+            {
+                Vector2 targetPosition = p.PhysicsPosition;
+                targetPosition.y *= -1f;
+
+                p.ViewPosition = new Vector2(p.ViewPosition.x, Mathf.Max(targetPosition.y, p.ViewPosition.y + deltaPosition));
+
+                if (p.ViewPosition.y > grid.ViewPosition.y + 0.5f)
+                    p.gameObject.SetActive(false);
+                else
+                    p.gameObject.SetActive(true);
             }
         }
     }
@@ -197,6 +314,7 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         Add(GridStateEnum.WAITING_FOR_INPUT, new WaitingForInputState());
         Add(GridStateEnum.GENERATING_PIECES, new GeneratingPiecesState());
         Add(GridStateEnum.DELETING_PIECES, new DeletingPiecesState());
+        Add(GridStateEnum.GENERATING_NEW_PIECES, new GeneratingNewPieces());
 
         SwitchTo(GridStateEnum.WAITING_FOR_INPUT);
     }
@@ -208,6 +326,37 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
     {
         frameDataBuffer.AddData(new MessageData<Vector2>("Generate", size)); //I want to be frame and call order independant. so x message at the save frame are well handled in my FSM
 
+    }
+
+    /// <summary>
+    /// Populate the grid array at index i, j with a piece
+    /// </summary>
+    /// <param name="i"></param>
+    /// <param name="j"></param>
+    public Piece Populate(int i, int j)
+    {
+        if (gridPieces[i][j])
+            gridPieces[i][j].GetComponent<PooledElement>().Pool();
+
+        GameObject go = piecePools[Random.Range(0, piecePools.Length)].objectPool.GetFromPool();
+        Piece p = go.GetComponent<Piece>();
+        gridPieces[i][j] = p;
+        p.gameObject.SetActive(false);
+        p.PhysicsPosition = new Vector2(i, j);
+        return p;
+    }
+
+    //Helper to place a piece in the grid
+    public void InterChange(Piece p1, Piece p2)
+    {
+        Debug.Log(p1.PhysicsPosition + "______" + p2.PhysicsPosition);
+
+        gridPieces[(int)p1.PhysicsPosition.x][(int)p1.PhysicsPosition.y] = p2;                          //Just place them in the right place in the array. View position will be placed later.
+        gridPieces[(int)p2.PhysicsPosition.x][(int)p2.PhysicsPosition.y] = p1;
+
+        Vector2 temp = p1.PhysicsPosition;
+        p1.PhysicsPosition = p2.PhysicsPosition;
+        p2.PhysicsPosition = temp;
     }
 
 
@@ -222,28 +371,27 @@ public class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D
         List<Piece> currentVerticalConnection = new List<Piece>();
         List<Piece> currentBestConnection = null;
 
-        for (int i = 0; i < size.x; i++)
+        for (int j = (int)size.y - 1; j >= 0; j--)
         {
-            for (int j = (int)size.y-1; j >=0; j--)
+            for (int i = 0; i < size.x; i++)
             {
-                GetRightConnectedPieces(i,j, ref currentHorizontalConnection); //Passing argument with ref to specify we modify the list
-                GetTopConnectedPieces(i, j, ref currentVerticalConnection); //Passing argument with ref to specify we modify the list
+                    GetRightConnectedPieces(i,j, ref currentHorizontalConnection); //Passing argument with ref to specify we modify the list
+                    GetTopConnectedPieces(i, j, ref currentVerticalConnection); //Passing argument with ref to specify we modify the list
 
-                if (currentHorizontalConnection.Count > currentVerticalConnection.Count)
-                {
-                    currentBestConnection = currentHorizontalConnection;
-                }
-                else
-                {
-                    currentBestConnection = currentVerticalConnection;
-                }
+                    if (currentHorizontalConnection.Count > currentVerticalConnection.Count)
+                    {
+                        currentBestConnection = currentHorizontalConnection;
+                    }
+                    else
+                    {
+                        currentBestConnection = currentVerticalConnection;
+                    }
 
-                if (currentBestConnection.Count >= minConnectionLength)
-                {
-                    Debug.Log(currentBestConnection.Count);
-                    return currentBestConnection;
+                    if (currentBestConnection.Count >= minConnectionLength)
+                    {
+                        return currentBestConnection;
+                    }
                 }
-            }
         }
 
         return null;

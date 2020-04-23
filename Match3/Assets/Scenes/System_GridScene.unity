@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4893dd9f0b307304f977d510e5bb34ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 0, y: 0}
+  gridSize: {x: 8, y: 8}
   clock: {fileID: 680979508}
 --- !u!4 &680979507
 Transform:

@@ -12,4 +12,5 @@ public enum GridStateEnum
     UNLOCKING_SOFTLOCK = 8, //Softlock detected and the gris is changing some pieces to unlock the situation
     WAITING_FOR_INPUT = 16,
     GENERATING_PIECES = 32,
+    GENERATING_NEW_PIECES = 64,
 }
