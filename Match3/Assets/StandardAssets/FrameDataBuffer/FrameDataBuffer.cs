@@ -139,6 +139,16 @@ public class FrameDataBuffer {
         return default(T);
     }
 
+    public T GetLast<T>(Func<T, bool> predicate)
+    {
+        if (lastFrameData.TryGetValue(typeof(T), out CircularBuffer<FrameData<object>> buffer))
+        {
+            return (T)buffer.Find((x)=>predicate((T)x.data)).data;
+        }
+
+        return default(T);
+    }
+
     public void Clear()
     {
         currentFrameData.Clear();

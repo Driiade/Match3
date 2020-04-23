@@ -2,7 +2,7 @@
 /// <summary>
 /// Represent state of the grid
 /// </summary>
-public enum GridState
+public enum GridStateEnum
 {
     
     NONE = 0, //No state
@@ -10,5 +10,6 @@ public enum GridState
     DELETING_PIECES = 2, //If the grid delete pieces because the player did a good move
     PIECE_BEING_DRAGGED = 4, //A piece is being dragged 
     UNLOCKING_SOFTLOCK = 8, //Softlock detected and the gris is changing some pieces to unlock the situation
-
+    WAITING_FOR_INPUT = 16,
+    GENERATING_PIECES = 32,
 }

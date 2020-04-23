@@ -94,44 +94,29 @@ namespace BC_Solution
         GameObject InstantiateGameObject(GameObject prefab)
         {
             GameObject newObj = Instantiate(prefab) as GameObject;
-            newObj.transform.SetParent(transform);
-            if (newObj.transform.parent == null)
-            {
-                newObj.transform.SetParent(transform);
-            }
-            newObj.transform.localScale = Vector3.one;
+            newObj.SetActive(false);
+            newObj.transform.SetParent(parent, false);
+            newObj.transform.localPosition = Vector3.zero;
+            newObj.transform.localRotation = Quaternion.identity;
+
+            PooledElement pe = newObj.GetComponent<PooledElement>();
+            if (pe)
+                pe.Init(this);
+
+            allGameObjects.Add(newObj);
+            pooledGameObjects.Add(newObj);
+
+
+            OnGameObjectInstantiate?.Invoke(newObj);
+
             return newObj;
         }
 
         public IEnumerator Init()
         {
-            DestroyAll();
-
-            yield return new WaitForSeconds(UnityEngine.Random.Range(0,timeBetweenEachInstantiate));
-
-            allGameObjects.Clear();
-            pooledGameObjects.Clear();
-            unPooledGameObjects.Clear();
-
-            for (int i = 0; i < bufferCount; i++)
+            for (int i = 0; i < bufferCount - allGameObjects.Count; i++)
             {
                 GameObject obj = InstantiateGameObject(copyGameObject);
-                pooledGameObjects.Add(obj);
-                allGameObjects.Add(obj);
-
-                obj.SetActive(false);
-                obj.transform.SetParent(parent);
-                obj.transform.localPosition = Vector3.zero;
-                obj.transform.localRotation = Quaternion.identity;
-
-                if (OnGameObjectInstantiate != null)
-                    OnGameObjectInstantiate(obj);
-
-                PooledElement pe = obj.GetComponent<PooledElement>();
-                if (!pe)
-                    pe = obj.AddComponent<PooledElement>();
-
-                pe.Init(this);
 
                 if(timeBetweenEachInstantiate > 0)
                     yield return new WaitForSeconds(timeBetweenEachInstantiate);
@@ -140,17 +125,16 @@ namespace BC_Solution
 
         public void DestroyAll()
         {
-            PoolAll();
-
             for (int i = allGameObjects.Count-1; i >= 0; i--)
             {
                 if (allGameObjects[i] != copyGameObject)
                 {
                     Destroy(allGameObjects[i]);
-                    allGameObjects.RemoveAt(i);
                 }
             }
 
+            unPooledGameObjects.Clear();
+            allGameObjects.Clear();
             pooledGameObjects.Clear();
         }
 
@@ -210,32 +194,17 @@ namespace BC_Solution
             if (pooledGameObjects.Count > 0)
             {
                 obj = pooledGameObjects[0];
-                pooledGameObjects.RemoveAt(0);
-
-                obj.SetActive(activate);
             }
             else if (!onlyPooled && allGameObjects.Count < maxCount)
             {
-                obj = InstantiateGameObject(copyGameObject);
-                obj.SetActive(activate);
-
-                obj.transform.SetParent(parent, false);
-                obj.transform.localPosition = Vector3.zero;
-                obj.transform.localRotation = Quaternion.identity;
-
-                if (OnGameObjectInstantiate != null)
-                    OnGameObjectInstantiate(obj);
-
-                PooledElement pe = obj.GetComponent<PooledElement>();
-                if (pe)
-                    pe.Init(this);
-
-                allGameObjects.Add(obj);       
+                obj = InstantiateGameObject(copyGameObject);    
             }
 
             if (obj)
             {
+                obj.SetActive(activate);
                 obj.transform.SetParent(parent, false);
+                pooledGameObjects.Remove(obj);
                 unPooledGameObjects.Add(obj);
             }
 
@@ -255,16 +224,14 @@ namespace BC_Solution
             }
 
             obj.transform.SetParent(parent, false);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localRotation = Quaternion.identity;
             obj.SetActive(false);
         }
 
         public void PoolAll()
         {
-            for (int i = 0; i < allGameObjects.Count; i++)
+            for (int i = unPooledGameObjects.Count -1; i >=0; i--)
             {
-                Pool(allGameObjects[i]);
+                Pool(unPooledGameObjects[i]);
             }
         }
 

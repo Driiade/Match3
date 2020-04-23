@@ -3,11 +3,30 @@
 /// <summary>
 /// Represent a piece on the grid
 /// </summary>
-public class Piece : StatedMono<PieceState>, IPositionProvider3D
+public class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D
 {
+    public class WaitingForInputState : State
+    {
+        public override void OnEnter(StatedMono<PieceStateEnum> statedMono)
+        {
+            //
+        }
+
+        public override void OnExit(StatedMono<PieceStateEnum> statedMono)
+        {
+            //
+        }
+
+        public override void OnUpdate(StatedMono<PieceStateEnum> statedMono)
+        {
+            //
+        }
+    }
+
+
     [SerializeField]
-    private PieceType pieceType;
-    public PieceType PieceType
+    private PieceTypeEnum pieceType;
+    public PieceTypeEnum PieceType
     {
         get => pieceType;
     }
@@ -17,4 +36,7 @@ public class Piece : StatedMono<PieceState>, IPositionProvider3D
     /// </summary>
     public Vector3 PhysicsPosition { get => this.transform.position; set => this.transform.position = value; }
     public Vector3 ViewPosition { get => this.transform.position; set => this.transform.position = value; }
+
+
+
 }

@@ -28,6 +28,9 @@ namespace BC_Solution
     {
         public abstract float CurrentFixedTime { get; set; }
         public abstract float CurrentRenderTime { get; set; }
+        public abstract float LocalTimeScale { get; set ; }
+        public abstract float DeltaFixedTime { get;}
+        public abstract float DeltaRenderTime { get; }
 
         public abstract void BulletTime(BulletTimeScriptableObject bulletTime);
         public abstract void SetClockTime(float time);

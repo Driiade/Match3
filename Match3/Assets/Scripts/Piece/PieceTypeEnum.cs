@@ -1,6 +1,6 @@
 ﻿
 
-public enum PieceType 
+public enum PieceTypeEnum 
 {
     NONE=0,
     YELLOW_GEM =1,

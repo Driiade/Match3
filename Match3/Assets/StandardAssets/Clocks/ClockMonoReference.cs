@@ -27,7 +27,7 @@ namespace BC_Solution
     /// <summary>
     /// Get a clock by string reference
     /// </summary>
-    public class ClockMonoReference : MonoBehaviour, IClock, IAwakable
+    public class ClockMonoReference : AbstractClockMono, IAwakable
     {
 
         [SerializeField]
@@ -35,8 +35,11 @@ namespace BC_Solution
 
         private ClockMono cachedClock;
 
-        public float CurrentFixedTime { get => cachedClock.CurrentFixedTime; set => cachedClock.CurrentFixedTime = value; }
-        public float CurrentRenderTime { get => cachedClock.CurrentRenderTime; set => cachedClock.CurrentRenderTime = value; }
+        public override float CurrentFixedTime { get => cachedClock.CurrentFixedTime; set => cachedClock.CurrentFixedTime = value; }
+        public override float CurrentRenderTime { get => cachedClock.CurrentRenderTime; set => cachedClock.CurrentRenderTime = value; }
+        public override float LocalTimeScale { get => cachedClock.LocalTimeScale; set => cachedClock.LocalTimeScale = value; }
+        public override float DeltaFixedTime { get => cachedClock.DeltaFixedTime; }
+        public override float DeltaRenderTime { get => cachedClock.DeltaRenderTime;}
 
         private void RefreshCachedClock()
         {
@@ -58,13 +61,13 @@ namespace BC_Solution
             return cachedClock;
         }
 
-        public void SetClockTime(float time)
+        public override void SetClockTime(float time)
         {
             cachedClock.CurrentFixedTime = time;
             cachedClock.CurrentRenderTime = time;
         }
 
-        public void BulletTime(BulletTimeScriptableObject bulletTime)
+        public override void BulletTime(BulletTimeScriptableObject bulletTime)
         {
             cachedClock.BulletTime(bulletTime);
         }

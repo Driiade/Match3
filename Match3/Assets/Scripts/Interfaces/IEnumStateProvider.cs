@@ -7,6 +7,6 @@
 /// <typeparam name="T"></typeparam>
 public interface IEnumStateProvider<T> where T : Enum
 {
-   T CurrentState { get; }
+   T CurrentStateType { get; }
    void SwitchTo(T state);
 }

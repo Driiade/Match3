@@ -47,5 +47,23 @@ namespace BC_Solution
             }
             return newArray;
         }
+
+        /// <summary>
+        /// Helper for creating 2D array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static T[][] New2DArray<T>(int width, int height)
+        {
+            T[][] array = new T[width][];
+            for (int i = 0; i < width; i++)
+            {
+                array[i] = new T[height];
+            }
+
+            return array;
+        }
     }
 }

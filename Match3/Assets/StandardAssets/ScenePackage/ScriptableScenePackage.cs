@@ -30,6 +30,7 @@ namespace BC_Solution
     /// <summary>
     /// A package of scene that have to be loaded all together to work as expected.
     /// </summary>
+   [CreateAssetMenu(fileName ="ScriptableScenePackage", menuName ="ScriptableObjects/ScriptableScenePackage")]
     public class ScriptableScenePackage : ScriptableObject
     {
         public static Action<ScriptableScenePackage> OnEndLoadingScenePackage;

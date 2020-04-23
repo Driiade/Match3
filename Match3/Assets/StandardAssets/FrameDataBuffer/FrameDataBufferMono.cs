@@ -30,7 +30,7 @@ using UnityEngine;
 [DefaultExecutionOrder(int.MinValue)]
 public class FrameDataBufferMono : MonoBehaviour, IDataContainer
 {
-    private FrameDataBuffer frameDataBuffer;
+    private FrameDataBuffer frameDataBuffer = new FrameDataBuffer();
 
     public void OnEnable()
     {
@@ -75,6 +75,11 @@ public class FrameDataBufferMono : MonoBehaviour, IDataContainer
     public T GetLast<T>()
     {
         return frameDataBuffer.GetLast<T>();
+    }
+
+    public T GetLast<T>(Func<T, bool> predicate)
+    {
+        return frameDataBuffer.GetLast<T>(predicate);
     }
 
     public void Clear()
