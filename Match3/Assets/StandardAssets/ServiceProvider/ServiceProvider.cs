@@ -38,13 +38,24 @@ namespace BC_Solution
         /// <returns></returns>
         public static T GetService<T>()
         {
-            List<object> service;
-            serviceDictionary.TryGetValue(typeof(T), out service);
+            List<object> services;
+            serviceDictionary.TryGetValue(typeof(T), out services);
 
-            if (service != null && service.Count > 0)
-                return (T)service[0];
+            if (services != null && services.Count > 0)
+                return (T)services[0];
             else
-                return default(T);
+            {
+                foreach (List<object> serviceList in serviceDictionary.Values)
+                {
+                    foreach (var service in serviceList)
+                    {
+                        if (service is T)
+                            return (T)service;
+                    }
+                }
+            }
+
+            return default(T);
         }
 
 

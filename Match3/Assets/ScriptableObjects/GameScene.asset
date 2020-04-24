@@ -17,6 +17,7 @@ MonoBehaviour:
   - System
   - GridScene
   - System_GridScene
+  - UI_GridScene
   cheatScenes: []
   endScenePackages: []
   optionalScenes: []

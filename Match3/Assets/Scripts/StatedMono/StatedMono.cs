@@ -5,6 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// A small FSM to help with behaviour
+/// For this application it run in a frame dependent way. We don't need frame independent algorithm, so keep it like this to save CPU power.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
@@ -19,7 +20,7 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
         public abstract T CheckForNextState(StatedMono<T> statedMono);
     }
 
-    public T CurrentStateType { get => CurrentState.stateType; }
+    public T CurrentStateType { get => CurrentState != null? CurrentState.stateType : default(T) ; }
 
     private State CurrentState { get; set; }
 
