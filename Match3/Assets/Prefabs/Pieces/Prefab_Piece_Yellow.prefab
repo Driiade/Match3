@@ -88,10 +88,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7756368489581715282, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1ab1cae7f6a76724c91a691abeebf300, type: 2}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6d803952fe84bb548a4d0c6f4b253b99,
+        type: 3}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 63999.996
+      objectReference: {fileID: 0}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 63999.996
+      objectReference: {fileID: 0}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9213946809169085284, guid: ec8cafac67231ad498bee3071def0940,
         type: 3}
       propertyPath: m_Name
-      value: YellowGemPiece
+      value: Prefab_Piece_Yellow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec8cafac67231ad498bee3071def0940, type: 3}

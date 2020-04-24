@@ -7,31 +7,27 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3098314820695461873, guid: ec8cafac67231ad498bee3071def0940,
-        type: 3}
-      propertyPath: pieceType
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 4395120600059105175, guid: ec8cafac67231ad498bee3071def0940,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c51eb9e5ca23f4844b9b500e4d6e76e2,
+      objectReference: {fileID: 21300000, guid: 6b16fead9d97b3e468504bebab731e34,
         type: 3}
-    - target: {fileID: 4395120600059105175, guid: ec8cafac67231ad498bee3071def0940,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_Size.x
       value: 0.64
       objectReference: {fileID: 0}
-    - target: {fileID: 4395120600059105175, guid: ec8cafac67231ad498bee3071def0940,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_Size.y
       value: 0.64
       objectReference: {fileID: 0}
-    - target: {fileID: 4395120600059105175, guid: ec8cafac67231ad498bee3071def0940,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_WasSpriteAssigned
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3098314820695461873, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: pieceType
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5356349044353682402, guid: ec8cafac67231ad498bee3071def0940,
         type: 3}
@@ -88,10 +84,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6b16fead9d97b3e468504bebab731e34,
+        type: 3}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 63999.996
+      objectReference: {fileID: 0}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 63999.996
+      objectReference: {fileID: 0}
+    - target: {fileID: 8757264255001202681, guid: ec8cafac67231ad498bee3071def0940,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9213946809169085284, guid: ec8cafac67231ad498bee3071def0940,
         type: 3}
       propertyPath: m_Name
-      value: BlueGemPiece
+      value: Prefab_Piece_Red
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec8cafac67231ad498bee3071def0940, type: 3}

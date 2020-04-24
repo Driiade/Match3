@@ -26,7 +26,7 @@ public partial class Grid
         {
             Grid grid = (Grid)statedMono;
             pieceToDestroy = grid.frameDataBuffer.GetLast<MessageData<List<Piece>>>((x) => x.message == "DeletePieces").obj;
-            timer = grid.clock.CurrentRenderTime + 0.5f;
+            timer = grid.clock.CurrentRenderTime + 0.25f;
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)

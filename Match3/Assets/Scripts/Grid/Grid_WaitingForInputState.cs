@@ -10,6 +10,11 @@ public partial class Grid
         {
             Grid grid = statedMono as Grid;
 
+            if (grid.frameDataBuffer.Exists<MessageData<Piece>>((x) => x.message == "PieceTaken")) //This is the most important, let player play
+            {
+                return (GridStateEnum.PIECE_BEING_DRAGGED);
+            }
+
             //Gestion state by message
             if (grid.frameDataBuffer.Exists<MessageData<Vector2>>((x) => x.message == "Generate"))
             {
@@ -19,6 +24,11 @@ public partial class Grid
             if (grid.frameDataBuffer.Exists<MessageData<List<Piece>>>((x) => x.message == "DeletePieces"))
             {
                 return (GridStateEnum.DELETING_PIECES);
+            }
+
+            if (grid.frameDataBuffer.Exists<MessageData<Piece>>((x) => x.message == "PlacePiece"))
+            {
+                return (GridStateEnum.SWITCHING_PIECES);
             }
 
             return this.stateType;
@@ -42,7 +52,6 @@ public partial class Grid
             if (connections != null)
             {
                 grid.frameDataBuffer.AddData(new MessageData<List<Piece>>("DeletePieces", connections));
-                return; //no player input authorized
             }
         }
     }

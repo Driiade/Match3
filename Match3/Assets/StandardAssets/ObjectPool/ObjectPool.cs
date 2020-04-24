@@ -93,7 +93,7 @@ namespace BC_Solution
 
         GameObject InstantiateGameObject(GameObject prefab)
         {
-            GameObject newObj = Instantiate(prefab) as GameObject;
+            GameObject newObj = GameObjectExtensions.InstantiateWithCallback(prefab) as GameObject;
             newObj.SetActive(false);
             newObj.transform.SetParent(parent, false);
             newObj.transform.localPosition = Vector3.zero;

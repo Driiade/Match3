@@ -158,7 +158,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36632029}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 519420032}
@@ -201,7 +201,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.9150943, g: 0.45999444, b: 0.012949424, a: 0}
+  m_BackGroundColor: {r: 0.3019608, g: 0.3019608, b: 0.3019608, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -320,6 +320,11 @@ PrefabInstance:
       propertyPath: bufferCount
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 672906188241909242, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: mode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2420059087775441639, guid: b723d5421e039ef4ba3741bee60137ff,
         type: 3}
       propertyPath: maxCount
@@ -329,12 +334,27 @@ PrefabInstance:
         type: 3}
       propertyPath: bufferCount
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2420059087775441639, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2997951071611096613, guid: b723d5421e039ef4ba3741bee60137ff,
         type: 3}
       propertyPath: m_Name
       value: Grid
       objectReference: {fileID: 0}
+    - target: {fileID: 3462374629575232735, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3462374629575232735, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3531682196778869116, guid: b723d5421e039ef4ba3741bee60137ff,
         type: 3}
       propertyPath: maxCount
@@ -344,6 +364,11 @@ PrefabInstance:
         type: 3}
       propertyPath: bufferCount
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3531682196778869116, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5673273950329777688, guid: b723d5421e039ef4ba3741bee60137ff,
         type: 3}
@@ -355,6 +380,11 @@ PrefabInstance:
       propertyPath: bufferCount
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5673273950329777688, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: mode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6431349649780712487, guid: b723d5421e039ef4ba3741bee60137ff,
         type: 3}
       propertyPath: maxCount
@@ -364,6 +394,11 @@ PrefabInstance:
         type: 3}
       propertyPath: bufferCount
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431349649780712487, guid: b723d5421e039ef4ba3741bee60137ff,
+        type: 3}
+      propertyPath: mode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b723d5421e039ef4ba3741bee60137ff, type: 3}

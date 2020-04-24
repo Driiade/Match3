@@ -30,14 +30,15 @@ public partial class Grid
             {
                 grid.piecePools[i].objectPool.PoolAll();
             }
-
-            for (int i = 0; i < grid.size.x; i++)
+            for (int i = 0; i < size.x; i++)
             {
-                for (int j = 0; j < grid.size.y; j++)
+                for (int j = 0; j < size.y; j++)
                 {
                     grid.Populate(i, j);
                 }
             }
+
+            grid.gridView.Initialize(grid.size);
 
             startTime = grid.clock.CurrentRenderTime;
         }

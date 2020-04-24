@@ -20,11 +20,15 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     [SerializeField]
     PiecePool[] piecePools = new PiecePool[0];
 
+
     [SerializeField]
     FrameDataBufferMono frameDataBuffer;
 
     [SerializeField]
     AbstractClockMono clock;
+
+    [SerializeField]
+    GridView gridView;
 
     private Vector2 size;
     public Vector2 Size
@@ -61,6 +65,9 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
         Add(GridStateEnum.GENERATING_PIECES, new GeneratingPiecesState());
         Add(GridStateEnum.DELETING_PIECES, new DeletingPiecesState());
         Add(GridStateEnum.GENERATING_NEW_PIECES, new GeneratingNewPieces());
+        Add(GridStateEnum.SWITCHING_PIECES, new SwitchingPiecesState());
+        Add(GridStateEnum.PIECE_BEING_DRAGGED, new PieceBeingDraggedState());
+
         //
     }
 
@@ -185,5 +192,129 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
             }
             else return; //Break of connection
         }
+    }
+
+
+    /// <summary>
+    /// Ask the grid to have a piece, can return null if it doen't want to.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public Piece AskForAPiece(Vector2 position)
+    {
+        position = WorldToGridPosition(position);
+
+        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT) //The only state where nothing is done, and all piece are in place
+        {
+            if(position.x >= 0 && position.x <= size.x && position.y >=0 && position.y <= size.y)
+            {
+                return this.gridPieces[(int)position.x][(int)position.y];
+            }
+        }
+
+        return null;
+    }
+
+    public Vector2 WorldToGridPosition(Vector2 position)
+    {
+        position.y *= -1;
+        position -= (Vector2)this.PhysicsPosition;
+        position += new Vector2(0.5f, 0.5f);
+        return position;
+    }
+
+    /// <summary>
+    /// Assuming you will take a valid piece on the grid
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <returns></returns>
+    public bool Take(Piece piece)
+    {
+        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT) //The only state where nothing is done, and all piece are in place
+        {
+            frameDataBuffer.AddData(new MessageData<Piece>("PieceTaken", piece)); //Send this if you want to lock the grid or whatever
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Ask the grid to place a piece, (can be ommitted due to current grid state)
+    /// </summary>
+    /// <param name="piece"></param>
+    /// <param name="position"></param>
+    public void PlacePiece(Piece piece, Vector2 position)
+    {
+        frameDataBuffer.AddData(new MessageData<Piece>("PlacePiece", piece)); //Send this and state will do the rest
+    }
+
+    /// <summary>
+    /// Check if placing a PieceType at the position will occure in a valid connection
+    /// </summary>
+    /// <param name="pieceType"></param>
+    /// <param name="placingPosition"></param>
+    /// <param name="minConnectionLength"></param>
+    /// <param name="bannedPosition">A position you want to ban (in case you swipe pieces)</param>
+    /// <returns></returns>
+    public bool PlacingWillCreateConnection(PieceTypeEnum pieceType, Vector2 placingPosition, Vector2 bannedPosition, int minConnectionLength = 3)
+    {
+        int x = (int)placingPosition.x;
+        int y = (int)placingPosition.y;
+
+        //Check Horizontal
+
+        int cpt = 1; //The first piece we place
+        for (int i = (int)placingPosition.x -1; i >= 0 && ( i < bannedPosition.x || bannedPosition.y != y); i--)
+        {
+            if (this.gridPieces[i][y].PieceType == pieceType)
+            {
+                cpt++;
+                if (cpt >= minConnectionLength)
+                    return true;
+            }
+            else break;
+        }
+
+        //cpt = 1; //The first piece we place  --> oops
+        for (int i = (int)placingPosition.x + 1; i < size.x && (i > bannedPosition.x || bannedPosition.y != y); i++)
+        {
+            if (this.gridPieces[i][y].PieceType == pieceType)
+            {
+                cpt++;
+                if (cpt >= minConnectionLength)
+                    return true;
+            }
+            else break;
+        }
+
+        //Check Vertical
+
+        cpt = 1; //The first piece we place
+        for (int i = (int)placingPosition.y - 1; i >= 0 && ( i < bannedPosition.y || bannedPosition.x != x); i--)
+        {
+            if (this.gridPieces[x][i].PieceType == pieceType)
+            {
+                cpt++;
+                if (cpt >= minConnectionLength)
+                    return true;
+            }
+            else break;
+        }
+
+        //cpt = 1; //The first piece we place  --> oops
+        for (int i = (int)placingPosition.y + 1; i < size.y && (i > bannedPosition.y || bannedPosition.x != x); i++)
+        {
+            if (this.gridPieces[x][i].PieceType == pieceType)
+            {
+                cpt++;
+                if (cpt >= minConnectionLength)
+                    return true;
+            }
+            else break;
+        }
+
+        return false; //What a bad player (^^)
     }
 }

@@ -15,9 +15,10 @@ MonoBehaviour:
   startScenePackages: []
   scenes:
   - System
-  - GridScene
   - System_GridScene
+  - GridScene
   - UI_GridScene
+  - Player
   cheatScenes: []
   endScenePackages: []
   optionalScenes: []

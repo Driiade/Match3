@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BC_Solution;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class GridView : MonoBehaviour
     [SerializeField]
     float lineWidth = 0.2f;
 
+    public float zGridOffset;
+
     [Space(10)]
     [Header("Framing")]
     [SerializeField]
@@ -25,29 +28,35 @@ public class GridView : MonoBehaviour
     [SerializeField]
     Transform mask;
 
-    static Material lineMaterial;
-    static void CreateLineMaterial()
-    {
-        // Unity has a built-in shader that is useful for drawing
-        // simple colored things.
-        Shader shader = Shader.Find("Hidden/Internal-Colored");
-        lineMaterial = new Material(shader);
-        lineMaterial.hideFlags = HideFlags.HideAndDontSave;
-        // Turn on alpha blending
-        lineMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        lineMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        // Turn backface culling off
-        lineMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
-        // Turn off depth writes
-        lineMaterial.SetInt("_ZWrite", 0);
-    }
+    [SerializeField]
+    ObjectPool piecebackGroundObjectPool;
 
-    void Awake()
+    [SerializeField]
+    Material lineMaterial;
+
+    /// <summary>
+    /// Use this array to catch up where pieces are
+    /// </summary>
+    private Background[][] gridBackgrounds;
+
+    public void Initialize(Vector2 size)
     {
-        if (!lineMaterial)
+        gridBackgrounds = ArrayExtension.New2DArray<Background>((int)size.x, (int)size.y);
+
+        piecebackGroundObjectPool.PoolAll();
+
+        for (int i = 0; i < size.x; i++)
         {
-            CreateLineMaterial();
+            for (int j = 0; j < size.y; j++)
+            {
+
+                GameObject go = piecebackGroundObjectPool.GetFromPool();
+                go.transform.position = new Vector2(i, -j);
+
+                gridBackgrounds[i][j] = go.GetComponent<Background>();
+            }
         }
+
     }
 
     private void Update()
@@ -76,7 +85,7 @@ public class GridView : MonoBehaviour
 
         GL.Color(new Color(0, 0, 0, 1));
 
-        Vector3 offset = new Vector3(-0.5f * ((grid.Size.x + 1) % 2) - lineWidth, 0.5f + 0.5f * ((grid.Size.y + 1) % 2), 0); //Center on the grid. We use complicate algorithm to handle all cases, but we don't really need that.
+        Vector3 offset = new Vector3(-0.5f * ((grid.Size.x + 1) % 2) - lineWidth, 0.5f + 0.5f * ((grid.Size.y + 1) % 2), zGridOffset); //Center on the grid. We use complicate algorithm to handle all cases, but we don't really need that.
 
         //Horizontal
         for (int i = 0; i < grid.Size.x; ++i)
@@ -95,7 +104,7 @@ public class GridView : MonoBehaviour
             }
         }
 
-        offset = new Vector3(-0.5f + 0.5f * ((grid.Size.x + 1) % 2), 0.5f * ((grid.Size.y + 1) % 2) + lineWidth, 0); //Center on the grid. We use complicate algorithm to handle all cases, but we don't really need that.
+        offset = new Vector3(-0.5f + 0.5f * ((grid.Size.x + 1) % 2), 0.5f * ((grid.Size.y + 1) % 2) + lineWidth, zGridOffset); //Center on the grid. We use complicate algorithm to handle all cases, but we don't really need that.
         //Vertical
         for (int i = 0; i < grid.Size.x +1; ++i)
         {
@@ -105,11 +114,11 @@ public class GridView : MonoBehaviour
                 float xL = i - 0.5f - lineWidth;
 
                 //Draw Line
-                GL.Vertex(new Vector3(xR, 0, 0) + offset);
                 GL.Vertex(new Vector3(xL, 0, 0) + offset);
+                GL.Vertex(new Vector3(xR, 0, 0) + offset);
 
-                GL.Vertex(new Vector3(xL, -grid.Size.y - 2f*lineWidth, 0) + offset);
                 GL.Vertex(new Vector3(xR, -grid.Size.y - 2f * lineWidth, 0) + offset);
+                GL.Vertex(new Vector3(xL, -grid.Size.y - 2f*lineWidth, 0) + offset);
             }
         }
 
@@ -118,4 +127,19 @@ public class GridView : MonoBehaviour
     }
 
 
+    public void StartHighlighting(List<Vector2> positions)
+    {
+        foreach (Vector2 position in positions)
+        {
+            gridBackgrounds[(int)position.x][(int)position.y].Highlight(true);
+        }
+    }
+
+    public void StopHighlighting(List<Vector2> positions)
+    {
+        foreach (Vector2 position in positions)
+        {
+            gridBackgrounds[(int)position.x][(int)position.y].Highlight(false);
+        }
+    }
 }

@@ -4,11 +4,22 @@ using UnityEngine;
 
 
 /// <summary>
+/// Used with StatedMonoSystem
+/// </summary>
+public abstract class StatedMono : MonoBehaviour
+{
+    public abstract void CheckForNextState();
+    public abstract void UpdateBehaviour();
+}
+
+
+
+/// <summary>
 /// A small FSM to help with behaviour
 /// For this application it run in a frame dependent way. We don't need frame independent algorithm, so keep it like this to save CPU power.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
+public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
 {
 
     public abstract class State
@@ -63,17 +74,23 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
     }
 
 
-    /// <summary>
-    /// Unity update call each frame
-    /// </summary>
-    void Update()
+    public override void CheckForNextState()
     {
         if (CurrentState != null)
         {
             T nextState = CurrentState.CheckForNextState(this);
             if (!nextState.Equals(CurrentStateType))
                 SwitchTo(nextState);
+        }
+    }
 
+    /// <summary>
+    /// Unity update call each frame
+    /// </summary>
+    public override  void UpdateBehaviour()
+    {
+        if (CurrentState != null)
+        {
             CurrentState.OnUpdate(this);
         }
     }
