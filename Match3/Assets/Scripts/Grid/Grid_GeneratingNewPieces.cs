@@ -90,7 +90,7 @@ public partial class Grid
                 if (!stillFalling && p.ViewPosition.y - targetPosition.y >= 0.01f)
                     stillFalling = true;
 
-                if (p.ViewPosition.y > grid.ViewPosition.y + 0.5f)
+                if (p.ViewPosition.y > grid.ViewPosition.y + 1f)
                     p.gameObject.SetActive(false);
                 else
                     p.gameObject.SetActive(true);

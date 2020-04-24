@@ -71,7 +71,7 @@ public partial class Grid
                 {
                     grid.gridPieces[i][j].ViewPosition = new Vector3(i, Mathf.Max(-j, -j + 6f * Mathf.Sin(i * 0.2f) - deltaTime * 10f + grid.size.y), grid.ViewPosition.z); //Starting to left top
 
-                    if (grid.gridPieces[i][j].ViewPosition.y > grid.ViewPosition.y + 0.5f)
+                    if (grid.gridPieces[i][j].ViewPosition.y > grid.ViewPosition.y + 1f)
                         grid.gridPieces[i][j].gameObject.SetActive(false);
                     else
                         grid.gridPieces[i][j].gameObject.SetActive(true);

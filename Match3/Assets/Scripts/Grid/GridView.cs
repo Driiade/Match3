@@ -13,6 +13,18 @@ public class GridView : MonoBehaviour
     [SerializeField]
     float lineWidth = 0.2f;
 
+    [Space(10)]
+    [Header("Framing")]
+    [SerializeField]
+    Transform framing;
+
+    public Vector2 scaleFactor = Vector2.one;
+
+    [Space(10)]
+    [Header("Mask")]
+    [SerializeField]
+    Transform mask;
+
     static Material lineMaterial;
     static void CreateLineMaterial()
     {
@@ -36,6 +48,17 @@ public class GridView : MonoBehaviour
         {
             CreateLineMaterial();
         }
+    }
+
+    private void Update()
+    {
+        framing.localScale = scaleFactor * grid.Size;
+
+        Vector2 gridCenter = new Vector2(0.5f * grid.Size.x - 0.5f * ((grid.Size.x + 1) % 2), -0.5f * grid.Size.y + 0.5f * ((grid.Size.y + 1) % 2));
+        framing.localPosition = gridCenter;
+
+        mask.localScale = grid.Size;
+        mask.localPosition = gridCenter;
     }
 
 
