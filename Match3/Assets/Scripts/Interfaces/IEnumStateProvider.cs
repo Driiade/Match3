@@ -8,5 +8,4 @@
 public interface IEnumStateProvider<T> where T : Enum
 {
    T CurrentStateType { get; }
-   void SwitchTo(T state);
 }

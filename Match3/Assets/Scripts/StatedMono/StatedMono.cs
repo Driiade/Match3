@@ -16,6 +16,7 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
         public abstract void OnEnter(StatedMono<T> statedMono);
         public abstract void OnUpdate(StatedMono<T> statedMono);
         public abstract void OnExit(StatedMono<T> statedMono);
+        public abstract T CheckForNextState(StatedMono<T> statedMono);
     }
 
     public T CurrentStateType { get => CurrentState.stateType; }
@@ -41,7 +42,7 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
     /// </summary>
     public Action<T> OnSwitchState;
 
-    public void SwitchTo(T stateType)
+    private void SwitchTo(T stateType)
     {
         if (CurrentState != null)
             CurrentState.OnExit(this);
@@ -52,6 +53,14 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
         OnSwitchState?.Invoke(CurrentState.stateType);
     }
 
+    public void StartBehaviour(T startState)
+    {
+        if (CurrentState == null)
+            SwitchTo(startState);
+        else
+            throw new Exception("Trying to start an already running stated behaviour, this is not allowed by design"); //Hard crash the app if you do this
+    }
+
 
     /// <summary>
     /// Unity update call each frame
@@ -59,7 +68,13 @@ public class StatedMono<T> : MonoBehaviour, IEnumStateProvider<T> where T: Enum
     void Update()
     {
         if (CurrentState != null)
+        {
+            T nextState = CurrentState.CheckForNextState(this);
+            if (!nextState.Equals(CurrentStateType))
+                SwitchTo(nextState);
+
             CurrentState.OnUpdate(this);
+        }
     }
 
 }
