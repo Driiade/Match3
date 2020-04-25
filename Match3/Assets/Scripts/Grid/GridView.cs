@@ -74,14 +74,16 @@ public class GridView : MonoBehaviour
         mask.localScale = grid.Size;
         mask.localPosition = gridCenter;
 
-
-        for (int i = 0; i < size.x + 1; ++i)
+        if (gridBackgrounds != null) //Occur if Initialization is not done yet. 
         {
-            for (int j = 0; j < size.y; j++)
+            for (int i = 0; i < size.x; ++i)
             {
-                if(gridBackgrounds[i][j].IsInHighlightState())
+                for (int j = 0; j < size.y; j++)
                 {
-                    gridBackgrounds[i][j].Synchronize(Time.time - highlightTime);
+                    if (gridBackgrounds[i][j].IsInHighlightState())
+                    {
+                        gridBackgrounds[i][j].Synchronize(Time.time - highlightTime);
+                    }
                 }
             }
         }

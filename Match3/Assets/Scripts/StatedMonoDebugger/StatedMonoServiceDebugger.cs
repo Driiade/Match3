@@ -8,14 +8,14 @@ using UnityEngine;
 /// Help to Debug current state for a statedMono service
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class StatedMonoServiceDebugger<T> : MonoBehaviour where T  : Enum
+public class StatedMonoServiceDebugger<T> : MonoBehaviour, IAwakable where T  : Enum
 {
 
     [SerializeField]
     TextMeshProUGUI text;
 
     StatedMono<T> statedMono;
-    void Start()
+    public void IAwake()
     {
         statedMono = ServiceProvider.GetService<StatedMono<T>>();
         text.text = statedMono.CurrentStateType.ToString();
