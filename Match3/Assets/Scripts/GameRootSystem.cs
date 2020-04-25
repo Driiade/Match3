@@ -17,7 +17,9 @@ public class GameRootSystem : MonoBehaviour
         yield return null;
         //
 
+        float timer = Time.time + 2f;
         yield return StartCoroutine(gameScenePackage.LoadScenePackageCoroutine(null, null,new string[]{this.gameObject.scene.name})); //Load the package containing the necessary for the game to run.
+        yield return new WaitUntil(() => timer < Time.time);
 
         SceneManager.UnloadSceneAsync(this.gameObject.scene.name); //Unload the gameRoot scene
     }
