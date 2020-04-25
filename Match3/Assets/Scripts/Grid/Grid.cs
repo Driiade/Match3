@@ -73,7 +73,7 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
 
     public void IStart()
     {
-        StartBehaviour(GridStateEnum.WAITING_FOR_INPUT);
+        StartBehaviour(GridStateEnum.GENERATING_PIECES);
     }
 
 
@@ -326,7 +326,7 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <param name="pieceType"></param>
     /// <param name="placingPosition"></param>
     /// <returns></returns>
-    List<Piece> GetPlayerConnections(PieceTypeEnum pieceType, Vector2 placingPosition, int minConnectionLength = 3)
+    List<Piece> GetCrossConnections(PieceTypeEnum pieceType, Vector2 placingPosition, int minConnectionLength = 3)
     {
         int x = (int)placingPosition.x;
         int y = (int)placingPosition.y;

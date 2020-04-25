@@ -60,7 +60,7 @@ public partial class Grid
                 p2EndPosition = p1.PhysicsPosition;
                 grid.InterChange(p1, p2);
 
-                playerConnections = grid.GetPlayerConnections(p1.PieceType, p1.PhysicsPosition);
+                playerConnections = grid.GetCrossConnections(p1.PieceType, p1.PhysicsPosition);
             }
             else
             {

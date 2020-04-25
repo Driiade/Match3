@@ -19,12 +19,13 @@ public class StatedMonoServiceDebugger<T> : MonoBehaviour, IAwakable where T  : 
     {
         statedMono = ServiceProvider.GetService<StatedMono<T>>();
         text.text = statedMono.CurrentStateType.ToString();
-        statedMono.OnSwitchState += UpdateText;
+        statedMono.OnEnterState += UpdateText;
     }
 
     void OnDestroy()
     {
-        statedMono.OnSwitchState -= UpdateText;
+        if(statedMono)
+            statedMono.OnEnterState -= UpdateText;
     }
 
     void UpdateText(T stateType)
