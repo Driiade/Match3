@@ -815,12 +815,12 @@ PrefabInstance:
     - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 15
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
@@ -830,12 +830,17 @@ PrefabInstance:
     - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4546144060302649417, guid: 40c0f379ef80a40468c3ba578dd11bf6,
+        type: 3}
+      propertyPath: m_text
+      value: 'Player:'
       objectReference: {fileID: 0}
     - target: {fileID: 5331704394371988380, guid: 40c0f379ef80a40468c3ba578dd11bf6,
         type: 3}
