@@ -19,7 +19,7 @@ public partial class LevelSystem
 
         public override void OnEnter(StatedMono<LevelStateEnum> statedMono)
         {
-            GameObjectExtensions.OnGameObjectInstantiate += AwakeObject;
+            ServiceProvider.GetService<AutoScriptFlowSystem>().autoIAwake = true;
 
             IAwakable[] awakables = GameObjectExtensions.FindObjectsOfTypeAll<IAwakable>(true);
 
@@ -40,14 +40,6 @@ public partial class LevelSystem
         {
             //
         }
-
-        void AwakeObject(GameObject go)
-        {
-            IAwakable[] awakables = go.GetComponentsInChildren<IAwakable>(true);
-            for (int i = 0; i < awakables.Length; i++)
-            {
-                awakables[i].IAwake();
-            }
-        }
+      
     }
 }

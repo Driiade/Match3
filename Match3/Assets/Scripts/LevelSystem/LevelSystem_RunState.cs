@@ -12,9 +12,9 @@ public partial class LevelSystem
 
         public override void OnEnter(StatedMono<LevelStateEnum> statedMono)
         {
-            ServiceProvider.GetService<Grid>().Generate(((LevelSystem)statedMono).gridSize);
+            ServiceProvider.GetService<AutoScriptFlowSystem>().autoIStart = true;
 
-            GameObjectExtensions.OnGameObjectInstantiate += StartObject;
+            ServiceProvider.GetService<Grid>().Generate(((LevelSystem)statedMono).gridSize);
 
             IStartable[] startables = GameObjectExtensions.FindObjectsOfTypeAll<IStartable>(true);
 
@@ -27,21 +27,12 @@ public partial class LevelSystem
 
         public override void OnExit(StatedMono<LevelStateEnum> statedMono)
         {
-            GameObjectExtensions.OnGameObjectInstantiate -= StartObject; //At the end of the game, don't start any object : the game is finished !
+            ServiceProvider.GetService<AutoScriptFlowSystem>().autoIStart = false; //At the end of the game, don't start any object : the game is finished !
         }
 
         public override void OnUpdate(StatedMono<LevelStateEnum> statedMono)
         {
 
-        }
-
-        void StartObject(GameObject go)
-        {
-            IStartable[] startable = go.GetComponentsInChildren<IStartable>(true);
-            for (int i = 0; i < startable.Length; i++)
-            {
-                startable[i].IStart();
-            }
         }
     }
 }
