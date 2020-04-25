@@ -28,7 +28,8 @@ public partial class Player : StatedMono<PlayerStateEnum>
 
         public override void OnExit(StatedMono<PlayerStateEnum> statedMono)
         {
-            
+            if(draggedPiece)
+                draggedPiece.Unselect();
         }
 
         public override void OnUpdate(StatedMono<PlayerStateEnum> statedMono)
@@ -59,7 +60,7 @@ public partial class Player : StatedMono<PlayerStateEnum>
 
             if (!Input.GetMouseButton(0))
             {
-                currentGrid.PlacePiece(draggedPiece, (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z))));
+                currentGrid.PlacePiece(draggedPiece, currentGrid.WorldToGridPosition( draggedPiece.ViewPosition));
                 draggedPiece.Unselect();
                 draggedPiece = null;
             }

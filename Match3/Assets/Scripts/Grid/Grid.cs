@@ -17,6 +17,16 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
         public ObjectPool objectPool;
     }
 
+
+    /// <summary>
+    /// Data used to palce a piece to a position
+    /// </summary>
+    private struct PlacePieceData
+    {
+        public Piece piece;
+        public Vector2 position;
+    }
+
     [SerializeField]
     PiecePool[] piecePools = new PiecePool[0];
 
@@ -202,13 +212,13 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
 
 
     /// <summary>
-    /// Ask the grid to have a piece, can return null if it doen't want to.
+    /// Ask the grid to have a piece, can return null if it doesn't want to.
     /// </summary>
-    /// <param name="position"></param>
+    /// <param name="position">In World position</param>
     /// <returns></returns>
     public Piece AskForAPiece(Vector2 position)
     {
-        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT && GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
+        if ((CurrentStateType == GridStateEnum.WAITING_FOR_INPUT || CurrentStateType == GridStateEnum.PIECE_BEING_DRAGGED) && GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
         {
             position = WorldToGridPosition(position);
             if (position.x >= 0 && position.x <= size.x && position.y >=0 && position.y <= size.y)
@@ -224,7 +234,9 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     {
         position.y *= -1;
         position -= (Vector2)this.PhysicsPosition;
-        position += new Vector2(0.5f, 0.5f);
+
+        position.x = Mathf.Round(position.x);
+        position.y = Mathf.Round(position.y);
 
         position.x = Mathf.Clamp(position.x, 0, size.x -1);
         position.y = Mathf.Clamp(position.y, 0, size.y -1);
@@ -237,17 +249,11 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// </summary>
     /// <param name="piece"></param>
     /// <returns></returns>
-    public bool Take(Piece piece)
+    public void Take(Piece piece)
     {
-        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT) //The only state where nothing is done, and all piece are in place
-        {
-            frameDataBuffer.AddData(new MessageData<Piece>("PieceTaken", piece)); //Send this if you want to lock the grid or whatever
-
-            return true;
-        }
-
-        return false;
+        frameDataBuffer.AddData(new MessageData<Piece>("PieceTaken", piece)); //Send this if you want to lock the grid or whatever
     }
+
 
     /// <summary>
     /// Ask the grid to place a piece, (can be ommitted due to current grid state)
@@ -256,7 +262,11 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <param name="position"></param>
     public void PlacePiece(Piece piece, Vector2 position)
     {
-        frameDataBuffer.AddData(new MessageData<Piece>("PlacePiece", piece)); //Send this and state will do the rest
+        frameDataBuffer.AddData(new MessageData<PlacePieceData>("PlacePiece", new PlacePieceData
+        {
+            piece = piece,
+            position = position,
+        })); //Send this and state will do the rest
     }
 
     /// <summary>

@@ -7,4 +7,5 @@ public enum PlayerStateEnum
     NONE = 0,
     WAITING_FOR_INPUT = 1,
     DRAGGING_PIECE = 2,
+    SELECTING_PIECE = 4,
 }

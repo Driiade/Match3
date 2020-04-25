@@ -14,7 +14,7 @@ public partial class Grid
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = statedMono as Grid;
-            if (grid.frameDataBuffer.Exists<MessageData<Piece>>((x) => x.message == "PlacePiece"))
+            if (grid.frameDataBuffer.Exists<MessageData<PlacePieceData>>((x) => x.message == "PlacePiece"))
             {
                 return (GridStateEnum.SWITCHING_PIECES);
             }

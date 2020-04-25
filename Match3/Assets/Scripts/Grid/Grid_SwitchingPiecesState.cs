@@ -45,8 +45,10 @@ public partial class Grid
         public override void OnEnter(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = statedMono as Grid;
-            p1 = grid.frameDataBuffer.GetLast<MessageData<Piece>>((x)=>x.message == "PlacePiece").obj;
-            Vector2 position = grid.WorldToGridPosition(p1.ViewPosition);
+
+            PlacePieceData placePieceData = grid.frameDataBuffer.GetLast<MessageData<PlacePieceData>>((x) => x.message == "PlacePiece").obj;
+            p1 = placePieceData.piece;
+            Vector2 position = placePieceData.position;
 
             p2 = grid.gridPieces[(int)position.x][(int)position.y];
 
@@ -55,7 +57,7 @@ public partial class Grid
             p1StartPosition = p1.ViewPosition;
             p2StartPosition = p2.ViewPosition;
 
-            if(grid.PlacingWillCreateConnection(p1.PieceType, p2.PhysicsPosition, p1.PhysicsPosition) || grid.PlacingWillCreateConnection(p2.PieceType, p1.PhysicsPosition, p2.PhysicsPosition))
+            if (Vector2.SqrMagnitude((Vector2)p1.PhysicsPosition - position) <= 1 && (grid.PlacingWillCreateConnection(p1.PieceType, p2.PhysicsPosition, p1.PhysicsPosition) || grid.PlacingWillCreateConnection(p2.PieceType, p1.PhysicsPosition, p2.PhysicsPosition)))
             {
                 p1EndPosition = p2.PhysicsPosition;
                 p2EndPosition = p1.PhysicsPosition;

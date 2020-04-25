@@ -14,6 +14,7 @@ public partial class Player : StatedMono<PlayerStateEnum>, IAwakable, IStartable
         //On Separate file
         Add(PlayerStateEnum.WAITING_FOR_INPUT, new WaitingForInputState());
         Add(PlayerStateEnum.DRAGGING_PIECE, new DraggingPieceState());
+        Add(PlayerStateEnum.SELECTING_PIECE, new SelectingPieceState());
         //
     }
 
