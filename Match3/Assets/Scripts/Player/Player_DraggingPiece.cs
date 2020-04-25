@@ -44,11 +44,11 @@ public partial class Player : StatedMono<PlayerStateEnum>
             float distToY = Mathf.Abs(position.y + draggedPiece.PhysicsPosition.y);
             float distToX = Mathf.Abs(position.x - draggedPiece.PhysicsPosition.x);
 
-            if(distToY > distToX) //Sort of clamp on a line (not true in case of rotation)
+            if(distToY > distToX && distToY > 0.2f) //Sort of clamp on a line (not true in case of rotation)
             {
                 position.x = draggedPiece.PhysicsPosition.x;
             }
-            else
+            else if (distToX > 0.2f)
                 position.y = -draggedPiece.PhysicsPosition.y;
 
             //

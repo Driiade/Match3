@@ -219,6 +219,10 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
         position.y *= -1;
         position -= (Vector2)this.PhysicsPosition;
         position += new Vector2(0.5f, 0.5f);
+
+        position.x = Mathf.Clamp(position.x, 0, size.x -1);
+        position.y = Mathf.Clamp(position.y, 0, size.y -1);
+
         return position;
     }
 
