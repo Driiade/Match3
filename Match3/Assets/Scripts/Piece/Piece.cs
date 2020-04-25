@@ -14,7 +14,22 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
     }
 
     [SerializeField]
+    PieceView pieceView;
+
+    [SerializeField]
     FrameDataBufferMono frameDataBuffer;
+
+    [SerializeField]
+    Animator animator;
+
+    [SerializeField]
+    PooledElement pooledElement;
+
+    [SerializeField]
+    AbstractClockMono clock;
+
+    [SerializeField]
+    AudioClip destroyAudioClip;
 
     private Vector2 index;
 
@@ -28,6 +43,7 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
     {
         Add(PieceStateEnum.WAITING_FOR_INPUT, new WaitingForInputState());
         Add(PieceStateEnum.DRAGGED, new DraggedState());
+        Add(PieceStateEnum.BEING_DESTROYED, new BeingDestroyedState());
     }
 
     public void IStart()
@@ -35,14 +51,21 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
         StartBehaviour(PieceStateEnum.WAITING_FOR_INPUT);
     }
 
-    public void BeTaken()
+    public void Select()
     {
         frameDataBuffer.AddData(new MessageData("BeTaken"));
+        animator.SetBool("selected", true);
     }
 
-    public void BeReleased()
+    public void Unselect()
     {
         frameDataBuffer.AddData(new MessageData("BeReleased"));
+        animator.SetBool("selected", false);
+    }
+
+    public void Destroy()
+    {
+        frameDataBuffer.AddData(new MessageData("Destroy")); //Can't be destroyed when taken. Maybe an issue later ?
     }
 
 }

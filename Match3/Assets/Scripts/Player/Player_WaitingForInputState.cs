@@ -40,7 +40,7 @@ public partial class Player : StatedMono<PlayerStateEnum>
                     {
                         Player player = statedMono as Player;
                         player.frameDataBuffer.AddData(new MessageData<Piece>("PieceTaken", foundPiece)); //Pass the data to the next state
-                        foundPiece.BeTaken();
+                        foundPiece.Select();
                     }
                 }
             }

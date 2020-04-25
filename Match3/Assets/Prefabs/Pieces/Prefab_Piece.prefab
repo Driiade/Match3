@@ -123,6 +123,9 @@ GameObject:
   - component: {fileID: 3098314820695461873}
   - component: {fileID: -6394688168844115526}
   - component: {fileID: -1182064958195960356}
+  - component: {fileID: 8345924181270735227}
+  - component: {fileID: 3514576887909308677}
+  - component: {fileID: 2438724810951612011}
   m_Layer: 0
   m_Name: Prefab_Piece
   m_TagString: Untagged
@@ -158,7 +161,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieceType: 0
+  pieceView: {fileID: 8345924181270735227}
   frameDataBuffer: {fileID: -1182064958195960356}
+  animator: {fileID: 3514576887909308677}
+  pooledElement: {fileID: -6394688168844115526}
+  clock: {fileID: 2438724810951612011}
+  destroyAudioClip: {fileID: 8300000, guid: 7949597fbff85b742b4e886a47fcabba, type: 3}
 --- !u!114 &-6394688168844115526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,3 +191,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28fc4ff2b7cd6d242870be06d9066d3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8345924181270735227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9213946809169085284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06901a8e412fc14418d4a0a4beebaeb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 8757264255001202681}
+  audioDestroyClip: {fileID: 8300000, guid: 7949597fbff85b742b4e886a47fcabba, type: 3}
+  sortingOrderWhenSelected: 2
+  sortingOrderWhenNotSelected: 1
+--- !u!95 &3514576887909308677
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9213946809169085284}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: abcf41d4543318644a97b129f2ea0d51, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2438724810951612011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9213946809169085284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b12d966e035e0c542aa42cd1ef45907f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clockType: Gameplay

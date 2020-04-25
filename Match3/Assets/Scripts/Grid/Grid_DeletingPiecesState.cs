@@ -34,6 +34,9 @@ public partial class Grid
             {
                 positions.Add(pieceToDestroy[i].PhysicsPosition);
             }
+
+            if(pieceToDestroy.Count >= 5)
+                ServiceProvider.GetService<SFXSystem>().PlaySFX(grid.comboAudioClip);
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)
@@ -52,7 +55,7 @@ public partial class Grid
                 {
                     for (int i = 0; i < pieceToDestroy.Count; i++)
                     {
-                        pieceToDestroy[i].GetComponent<PooledElement>().Pool();
+                        pieceToDestroy[i].Destroy();
                     }
 
                     grid.frameDataBuffer.AddData(new MessageData<List<Vector2>>("GeneratePieces", positions));

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BC_Solution;
+using System.Collections.Generic;
 using UnityEngine;
 
 public partial class Grid
@@ -61,12 +62,16 @@ public partial class Grid
                 grid.InterChange(p1, p2);
 
                 playerConnections = grid.GetCrossConnections(p1.PieceType, p1.PhysicsPosition);
+
+                ServiceProvider.GetService<SFXSystem>().PlaySFX(grid.validSwapAudioClip);
             }
             else
             {
                 p1EndPosition = p1.PhysicsPosition;
                 p2EndPosition = p2.PhysicsPosition;
                 playerConnections = null;
+
+                ServiceProvider.GetService<SFXSystem>().PlaySFX(grid.badSwapAudioClip);
             }
         }
 

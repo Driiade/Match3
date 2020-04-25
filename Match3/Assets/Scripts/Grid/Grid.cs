@@ -30,6 +30,15 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     [SerializeField]
     GridView gridView;
 
+    [SerializeField]
+    AudioClip badSwapAudioClip;
+
+    [SerializeField]
+    AudioClip validSwapAudioClip;
+
+    [SerializeField]
+    AudioClip comboAudioClip;
+
     private Vector2 size;
     public Vector2 Size
     {
@@ -92,9 +101,6 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <param name="j"></param>
     public Piece Populate(int i, int j)
     {
-        if (gridPieces[i][j])
-            gridPieces[i][j].GetComponent<PooledElement>().Pool();
-
         GameObject go = piecePools[Random.Range(0, piecePools.Length)].objectPool.GetFromPool();
         Piece p = go.GetComponent<Piece>();
         gridPieces[i][j] = p;

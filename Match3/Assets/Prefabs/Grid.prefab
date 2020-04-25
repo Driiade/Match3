@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 2209061449458086395}
   - component: {fileID: 2291348421517942585}
   - component: {fileID: 66087624362617298}
+  - component: {fileID: 4995744373637413741}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -229,7 +230,10 @@ MonoBehaviour:
     objectPool: {fileID: 3531682196778869116}
   frameDataBuffer: {fileID: 2291348421517942585}
   clock: {fileID: 66087624362617298}
-  gridView: {fileID: 6930746827574215248}
+  gridView: {fileID: 4995744373637413741}
+  badSwapAudioClip: {fileID: 8300000, guid: 42f442e80869c094a86ddb4f465b4ee9, type: 3}
+  validSwapAudioClip: {fileID: 8300000, guid: 1fd0ba358d5ba9a48a57f32e24e38a2f, type: 3}
+  comboAudioClip: {fileID: 8300000, guid: e3bc5069097458041addd2529fe9037f, type: 3}
 --- !u!114 &2209061449458086395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +272,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clockType: Gameplay
+--- !u!114 &4995744373637413741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2997951071611096613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580599851f352e540bfa42bc3ecfebb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grid: {fileID: 4540912082747855001}
+  lineWidth: 0.03
+  zGridOffset: 0
+  framing: {fileID: 4157762764010702449}
+  scaleFactor: {x: 0.97, y: 0.935}
+  mask: {fileID: 7961987398821696305}
+  piecebackGroundObjectPool: {fileID: 248520959927454005}
+  lineMaterial: {fileID: 2100000, guid: 344e5dd4d77e6c04bb0bbde3600d2688, type: 2}
 --- !u!1 &3148331879692308120
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +438,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3702894173425861908}
-  - component: {fileID: 6930746827574215248}
   m_Layer: 0
   m_Name: View
   m_TagString: Untagged
@@ -439,26 +462,6 @@ Transform:
   m_Father: {fileID: 79970983878174368}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6930746827574215248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4495472473147034115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 580599851f352e540bfa42bc3ecfebb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grid: {fileID: 4540912082747855001}
-  lineWidth: 0.03
-  zGridOffset: 0
-  framing: {fileID: 4157762764010702449}
-  scaleFactor: {x: 0.97, y: 0.935}
-  mask: {fileID: 7961987398821696305}
-  piecebackGroundObjectPool: {fileID: 248520959927454005}
-  lineMaterial: {fileID: 2100000, guid: 344e5dd4d77e6c04bb0bbde3600d2688, type: 2}
 --- !u!1 &4891958929282360959
 GameObject:
   m_ObjectHideFlags: 0

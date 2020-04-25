@@ -16,12 +16,14 @@ public partial class Piece
 
         public override void OnEnter(StatedMono<PieceStateEnum> statedMono)
         {
-            //
+            Piece p = statedMono as Piece;
+            p.pieceView.Select();
         }
 
         public override void OnExit(StatedMono<PieceStateEnum> statedMono)
         {
-            //
+            Piece p = statedMono as Piece;
+            p.pieceView.UnSelect();
         }
 
         public override void OnUpdate(StatedMono<PieceStateEnum> statedMono)

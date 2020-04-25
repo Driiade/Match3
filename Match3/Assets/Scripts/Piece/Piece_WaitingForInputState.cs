@@ -11,7 +11,10 @@ public partial class Piece
             if (p.frameDataBuffer.Exists<MessageData>((x) => x.message == ("BeTaken")))
                 return PieceStateEnum.DRAGGED;
 
-            return this.stateType;
+            if (p.frameDataBuffer.Exists<MessageData>((x) => x.message == ("Destroy")))
+                return PieceStateEnum.BEING_DESTROYED;
+
+                return this.stateType;
         }
 
         public override void OnEnter(StatedMono<PieceStateEnum> statedMono)

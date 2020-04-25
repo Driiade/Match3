@@ -44,13 +44,15 @@ public partial class Player : StatedMono<PlayerStateEnum>
             float distToY = Mathf.Abs(position.y + draggedPiece.PhysicsPosition.y);
             float distToX = Mathf.Abs(position.x - draggedPiece.PhysicsPosition.x);
 
+
+            //Goal: inside a small square where player can drag the piece freely, or outside the square : -> clamp to the lines
+            //We can improve this with 1/x function, and find the nearest point to the curve, for lerping position between line clamping. But... no time for this, square + lerp do the job for this test.
             if(distToY > distToX && distToY > 0.2f) //Sort of clamp on a line (not true in case of rotation)
             {
                 position.x = draggedPiece.PhysicsPosition.x;
             }
             else if (distToX > 0.2f)
                 position.y = -draggedPiece.PhysicsPosition.y;
-
             //
 
             draggedPiece.ViewPosition = Vector2.Lerp(draggedPiece.ViewPosition, position, player.clock.DeltaRenderTime * 8f) ;
@@ -58,7 +60,7 @@ public partial class Player : StatedMono<PlayerStateEnum>
             if (!Input.GetMouseButton(0))
             {
                 currentGrid.PlacePiece(draggedPiece, (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z))));
-                draggedPiece.BeReleased();
+                draggedPiece.Unselect();
                 draggedPiece = null;
             }
 
