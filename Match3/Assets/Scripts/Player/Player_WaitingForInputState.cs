@@ -33,7 +33,7 @@ public partial class Player : StatedMono<PlayerStateEnum>
         {
             if (Input.GetMouseButton(0)) //A click, you can replace this by a more sophisticated input module in real project.
             {
-                foundPiece = currentGrid.AskForAPiece(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z)));
+                foundPiece = currentGrid.AskForAPiece(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z)));
                 if (foundPiece)
                 {
                     if (currentGrid.Take(foundPiece)) //Just in case, double check we really can get this

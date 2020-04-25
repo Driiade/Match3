@@ -57,7 +57,7 @@ public partial class Player : StatedMono<PlayerStateEnum>
 
             if (!Input.GetMouseButton(0))
             {
-                currentGrid.PlacePiece(draggedPiece, (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z))));
+                currentGrid.PlacePiece(draggedPiece, (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z))));
                 draggedPiece.BeReleased();
                 draggedPiece = null;
             }
