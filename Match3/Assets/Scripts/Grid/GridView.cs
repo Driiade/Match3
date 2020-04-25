@@ -34,13 +34,18 @@ public class GridView : MonoBehaviour
     [SerializeField]
     Material lineMaterial;
 
+    private Vector2 size;
+
     /// <summary>
     /// Use this array to catch up where pieces are
     /// </summary>
     private Background[][] gridBackgrounds;
 
+    private float highlightTime =0;
+
     public void Initialize(Vector2 size)
     {
+        this.size = size;
         gridBackgrounds = ArrayExtension.New2DArray<Background>((int)size.x, (int)size.y);
 
         piecebackGroundObjectPool.PoolAll();
@@ -56,8 +61,8 @@ public class GridView : MonoBehaviour
                 gridBackgrounds[i][j] = go.GetComponent<Background>();
             }
         }
-
     }
+
 
     private void Update()
     {
@@ -68,7 +73,20 @@ public class GridView : MonoBehaviour
 
         mask.localScale = grid.Size;
         mask.localPosition = gridCenter;
+
+
+        for (int i = 0; i < size.x + 1; ++i)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                if(gridBackgrounds[i][j].IsInHighlightState())
+                {
+                    gridBackgrounds[i][j].Synchronize(Time.time - highlightTime);
+                }
+            }
+        }
     }
+
 
 
     //Draw a GL Grid
@@ -126,20 +144,35 @@ public class GridView : MonoBehaviour
         GL.PopMatrix();
     }
 
+    public void StartHighlightTime()
+    {
+        highlightTime = Time.time;
+    }
+
 
     public void StartHighlighting(List<Vector2> positions)
     {
         foreach (Vector2 position in positions)
         {
-            gridBackgrounds[(int)position.x][(int)position.y].Highlight(true);
+            gridBackgrounds[(int)position.x][(int)position.y].Highlight(true);         
         }
+    }
+
+    public void Select(Vector2 position, bool b)
+    {
+        gridBackgrounds[(int)position.x][(int)position.y].Select(b);
+    }
+
+    public void Hover(Vector2 position, bool b)
+    {
+        gridBackgrounds[(int)position.x][(int)position.y].Hover(b);
     }
 
     public void StopHighlighting(List<Vector2> positions)
     {
         foreach (Vector2 position in positions)
         {
-            gridBackgrounds[(int)position.x][(int)position.y].Highlight(false);
+            gridBackgrounds[(int)position.x][(int)position.y].Highlight(false);        
         }
     }
 }

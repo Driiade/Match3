@@ -9,6 +9,7 @@ public partial class Grid
 
         Piece draggedPiece;
         List<Vector2> highlightList = new List<Vector2>();
+        Vector2? lastGridViewHover = null;
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
@@ -51,7 +52,10 @@ public partial class Grid
             if (b.y >=0)
                 highlightList.Add(b);
 
+            grid.gridView.StartHighlightTime();
             grid.gridView.StartHighlighting(highlightList);
+
+            grid.gridView.Select(draggedPiece.PhysicsPosition, true);
 
         }
 
@@ -59,11 +63,29 @@ public partial class Grid
         {
             Grid grid = statedMono as Grid;
             grid.gridView.StopHighlighting(highlightList);
+            grid.gridView.Select(draggedPiece.PhysicsPosition, false);
+
+            if (lastGridViewHover != null)
+                grid.gridView.Hover((Vector2)lastGridViewHover, false);
+
+            lastGridViewHover = null;
         }
 
         public override void OnUpdate(StatedMono<GridStateEnum> statedMono)
         {
+            Grid grid = statedMono as Grid;
+            Vector2 gridViewPos = grid.WorldToGridPosition(draggedPiece.ViewPosition);
 
+            if (gridViewPos.x <  draggedPiece.PhysicsPosition.x -0.5f || gridViewPos.x > draggedPiece.PhysicsPosition.x + 0.5f
+                || gridViewPos.y < gridViewPos.y - 0.5f || gridViewPos.y < gridViewPos.y + 0.5f)
+
+            {
+                if(lastGridViewHover != null)
+                    grid.gridView.Hover((Vector2)lastGridViewHover, false);
+
+                grid.gridView.Hover(gridViewPos, true);
+                lastGridViewHover = gridViewPos;
+            }
         }
     }
 
