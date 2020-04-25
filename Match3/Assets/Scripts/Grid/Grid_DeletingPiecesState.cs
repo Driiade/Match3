@@ -9,12 +9,13 @@ public partial class Grid
         private List<Piece> pieceToDestroy;
 
         private float timer;
+        private List<Vector2> positions;
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = (Grid)statedMono;
 
-            if (grid.frameDataBuffer.Exists<MessageData<List<Vector2>>>((x) => x.message == "GeneratePieces"))
+            if (pieceToDestroy.Count == 0)
             {
                 return (GridStateEnum.GENERATING_NEW_PIECES);
             }
@@ -27,6 +28,12 @@ public partial class Grid
             Grid grid = (Grid)statedMono;
             pieceToDestroy = grid.frameDataBuffer.GetLast<MessageData<List<Piece>>>((x) => x.message == "DeletePieces").obj;
             timer = grid.clock.CurrentRenderTime + 0.25f;
+
+            positions = new List<Vector2>(pieceToDestroy.Count);
+            for (int i = 0; i < pieceToDestroy.Count; i++)
+            {
+                positions.Add(pieceToDestroy[i].PhysicsPosition);
+            }
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)
@@ -43,16 +50,13 @@ public partial class Grid
             {
                 if (grid.clock.CurrentRenderTime > timer)
                 {
-                    List<Vector2> positions = new List<Vector2>(pieceToDestroy.Count);
                     for (int i = 0; i < pieceToDestroy.Count; i++)
                     {
                         pieceToDestroy[i].GetComponent<PooledElement>().Pool();
-                        positions.Add(pieceToDestroy[i].PhysicsPosition);
                     }
 
-                    pieceToDestroy.Clear();
-
                     grid.frameDataBuffer.AddData(new MessageData<List<Vector2>>("GeneratePieces", positions));
+                    pieceToDestroy.Clear();
                 }
             }
 

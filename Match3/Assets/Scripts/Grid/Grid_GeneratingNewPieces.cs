@@ -98,6 +98,13 @@ public partial class Grid
 
             if (!stillFalling)
                 allPiecesFall = true;
+
+
+            List<Piece> connections = grid.GetFirstPiecesConnection(3);
+            if (connections != null)
+            {
+                grid.frameDataBuffer.AddData(new MessageData<List<Piece>>("DeletePieces", connections));
+            }
         }
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
@@ -106,7 +113,12 @@ public partial class Grid
 
             if (allPiecesFall) //Yeah, one turn !
             {
-                 return  GridStateEnum.WAITING_FOR_INPUT;
+                if (grid.frameDataBuffer.Exists<MessageData<List<Piece>>>((x) => x.message == "DeletePieces"))
+                {
+                    return GridStateEnum.DELETING_PIECES;
+                }
+                else
+                    return  GridStateEnum.WAITING_FOR_INPUT;
             }
 
             return this.stateType;

@@ -202,11 +202,10 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <returns></returns>
     public Piece AskForAPiece(Vector2 position)
     {
-        position = WorldToGridPosition(position);
-
-        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT) //The only state where nothing is done, and all piece are in place
+        if (CurrentStateType == GridStateEnum.WAITING_FOR_INPUT && GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
         {
-            if(position.x >= 0 && position.x <= size.x && position.y >=0 && position.y <= size.y)
+            position = WorldToGridPosition(position);
+            if (position.x >= 0 && position.x <= size.x && position.y >=0 && position.y <= size.y)
             {
                 return this.gridPieces[(int)position.x][(int)position.y];
             }

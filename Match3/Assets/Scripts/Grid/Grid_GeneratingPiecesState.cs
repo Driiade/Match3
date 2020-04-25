@@ -1,4 +1,5 @@
 ﻿using BC_Solution;
+using System.Collections.Generic;
 using UnityEngine;
 
 public partial class Grid
@@ -13,7 +14,7 @@ public partial class Grid
             float deltaTime = grid.clock.CurrentRenderTime - startTime;
             if (deltaTime > 2f)
             {
-                return (GridStateEnum.WAITING_FOR_INPUT);
+               return (GridStateEnum.WAITING_FOR_INPUT);
             }
             else
                 return this.stateType;
@@ -54,7 +55,6 @@ public partial class Grid
                 }
             }
         }
-
 
 
         /// <summary>
