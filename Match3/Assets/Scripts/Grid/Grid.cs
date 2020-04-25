@@ -316,4 +316,87 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
 
         return false; //What a bad player (^^)
     }
+
+
+
+    /// <summary>
+    /// Player can make better connections than the automatic connection deletion algorithm (by design)
+    /// Nearly the same as PlacingWillCreateConnection, maybe we can factorize those.
+    /// </summary>
+    /// <param name="pieceType"></param>
+    /// <param name="placingPosition"></param>
+    /// <returns></returns>
+    List<Piece> GetPlayerConnections(PieceTypeEnum pieceType, Vector2 placingPosition, int minConnectionLength = 3)
+    {
+        int x = (int)placingPosition.x;
+        int y = (int)placingPosition.y;
+
+        List<Piece> pieces = new List<Piece>(); ;
+        List<Piece> currentWorkingPiece = new List<Piece>();
+
+        pieces.Add(this.gridPieces[x][y]);
+
+        int cpt = 1; //The first piece we place
+        //Check Horizontal
+        for (int i = (int)placingPosition.x - 1; i >= 0; i--)
+        {
+            if (this.gridPieces[i][y].PieceType == pieceType)
+            {
+                cpt++;
+                currentWorkingPiece.Add(this.gridPieces[i][y]);
+            }
+            else break;
+        }
+
+        //cpt = 1; //The first piece we place  --> oops
+        for (int i = (int)placingPosition.x + 1; i < size.x; i++)
+        {
+            if (this.gridPieces[i][y].PieceType == pieceType)
+            {
+                cpt++;
+                currentWorkingPiece.Add(this.gridPieces[i][y]);
+            }
+            else break;
+        }
+
+        if(cpt >= minConnectionLength)
+        {
+            pieces.AddRange(currentWorkingPiece);
+        }
+
+        currentWorkingPiece.Clear();
+        cpt = 1;
+
+        //Check Vertical
+        for (int i = (int)placingPosition.y - 1; i >= 0; i--)
+        {
+            if (this.gridPieces[x][i].PieceType == pieceType)
+            {
+                cpt++;
+                currentWorkingPiece.Add(this.gridPieces[x][i]);
+            }
+            else break;
+        }
+
+        //cpt = 1; //The first piece we place  --> oops
+        for (int i = (int)placingPosition.y + 1; i < size.y; i++)
+        {
+            if (this.gridPieces[x][i].PieceType == pieceType)
+            {
+                cpt++;
+                currentWorkingPiece.Add(this.gridPieces[x][i]);
+            }
+            else break;
+        }
+
+        if (cpt >= minConnectionLength)
+        {
+            pieces.AddRange(currentWorkingPiece);
+        }
+
+        if (pieces.Count >= 3)
+            return pieces;
+        else
+            return null;
+    }
 }

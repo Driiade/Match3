@@ -1,4 +1,4 @@
-﻿using BC_Solution;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public partial class Grid
@@ -17,7 +17,7 @@ public partial class Grid
         Vector2 p2EndPosition;
 
         private float timeToSwitch = 0.2f;
-        private bool authorizedSwipe = false;
+        private List<Piece> playerConnections;
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
@@ -25,7 +25,14 @@ public partial class Grid
             float deltaTime = grid.clock.CurrentRenderTime - startTime;
 
             if (deltaTime > timeToSwitch)
-                return GridStateEnum.WAITING_FOR_INPUT;
+            {
+                if (playerConnections != null)
+                {
+                    return GridStateEnum.DELETING_PIECES;
+                }
+                else
+                    return GridStateEnum.WAITING_FOR_INPUT;
+            }
 
             return this.stateType;
         }
@@ -51,13 +58,15 @@ public partial class Grid
             {
                 p1EndPosition = p2.PhysicsPosition;
                 p2EndPosition = p1.PhysicsPosition;
-                authorizedSwipe= true;
+                grid.InterChange(p1, p2);
+
+                playerConnections = grid.GetPlayerConnections(p1.PieceType, p1.PhysicsPosition);
             }
             else
             {
                 p1EndPosition = p1.PhysicsPosition;
                 p2EndPosition = p2.PhysicsPosition;
-                authorizedSwipe = false;
+                playerConnections = null;
             }
         }
 
@@ -66,11 +75,6 @@ public partial class Grid
             //Ensure we are well placed
             p1.ViewPosition = new Vector2(p1EndPosition.x, -p1EndPosition.y);
             p2.ViewPosition = new Vector2(p2EndPosition.x, -p2EndPosition.y);
-
-            Grid grid = statedMono as Grid; //Tell the "Physics Engine" to switch
-
-            if(authorizedSwipe)
-                 grid.InterChange(p1, p2);
         }
 
 
@@ -88,6 +92,11 @@ public partial class Grid
             float speed = 1f/timeToSwitch; //We can catch this for performance
             p1.ViewPosition = Vector2.Lerp(p1StartPosition, new Vector2(p1EndPosition.x, -p1EndPosition.y), deltaTime * speed);
             p2.ViewPosition = Vector2.Lerp(p2StartPosition, new Vector2(p2EndPosition.x, -p2EndPosition.y), deltaTime * speed);
+
+            if (playerConnections != null)
+            {
+                grid.frameDataBuffer.AddData(new MessageData<List<Piece>>( "DeletePieces", playerConnections)); //This is not very CPU friendly, but I lack a sort of "blackboard" tool 
+            }
         }
 
     }
