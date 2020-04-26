@@ -10,6 +10,7 @@ public partial class Grid
 
         private float timer;
         private List<Vector2> positions;
+        private int countCombo = 1;
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
@@ -38,7 +39,12 @@ public partial class Grid
             if(pieceToDestroy.Count >= 5)
                 ServiceProvider.GetService<SFXSystem>().PlaySFX(grid.comboAudioClip);
 
-            ServiceProvider.GetService<ScoreSystem>().AddScore(pieceToDestroy.Count);
+            if (grid.LastState.stateType == GridStateEnum.GENERATING_NEW_PIECES)
+                countCombo++;
+            else
+                countCombo = 1;
+
+            ServiceProvider.GetService<ScoreSystem>().AddScore(pieceToDestroy.Count, countCombo);
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)
