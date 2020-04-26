@@ -1,7 +1,4 @@
 ﻿using BC_Solution;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public partial class Piece : StatedMono<PieceStateEnum>
 {
@@ -23,7 +20,8 @@ public partial class Piece : StatedMono<PieceStateEnum>
         {
             Piece piece = statedMono as Piece;
             ServiceProvider.GetService<SFXSystem>().PlayUniqueSFX(piece.destroyAudioClip);
-            timerForPooling = piece.clock.CurrentRenderTime + 0.2f;
+            timerForPooling = piece.clock.CurrentRenderTime + 1f;
+            piece.pieceView.PlayDestroyVFX();
         }
 
         public override void OnExit(StatedMono<PieceStateEnum> statedMono)

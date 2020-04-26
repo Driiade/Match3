@@ -19,8 +19,6 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
     [SerializeField]
     FrameDataBufferMono frameDataBuffer;
 
-    [SerializeField]
-    Animator animator;
 
     [SerializeField]
     PooledElement pooledElement;
@@ -54,13 +52,11 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
     public void Select()
     {
         frameDataBuffer.AddData(new MessageData("BeTaken"));
-        animator.SetBool("selected", true);
     }
 
     public void Unselect()
     {
         frameDataBuffer.AddData(new MessageData("BeReleased"));
-        animator.SetBool("selected", false);
     }
 
     public void Destroy()
