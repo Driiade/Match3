@@ -8,6 +8,14 @@ using UnityEngine;
 public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IStartable, IPausable
 {
     /// <summary>
+    /// Specific Grid state which you can ask informaiton from
+    /// </summary>
+    public abstract class GridState : State
+    {
+        public abstract Piece AskForAPiece(Grid grid, Vector2 position);
+    }
+
+    /// <summary>
     /// Data structure to easily add Gems
     /// </summary>
     [System.Serializable]
@@ -218,16 +226,10 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <returns></returns>
     public Piece AskForAPiece(Vector2 position)
     {
-        if ((CurrentStateType == GridStateEnum.WAITING_FOR_INPUT || CurrentStateType == GridStateEnum.PIECE_BEING_DRAGGED) && GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
-        {
-            position = WorldToGridPosition(position);
-            if (position.x >= 0 && position.x <= size.x && position.y >=0 && position.y <= size.y)
-            {
-                return this.gridPieces[(int)position.x][(int)position.y];
-            }
-        }
-
-        return null;
+        if (CurrentState != null && CurrentState is GridState)
+            return ((GridState)CurrentState).AskForAPiece(this, position);
+        else
+            return null;
     }
 
     public Vector2 WorldToGridPosition(Vector2 position)

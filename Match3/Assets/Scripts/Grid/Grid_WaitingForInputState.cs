@@ -4,8 +4,22 @@ using UnityEngine;
 
 public partial class Grid
 {
-    public class WaitingForInputState : State
+    public class WaitingForInputState : GridState
     {
+        public override Piece AskForAPiece(Grid grid, Vector2 position)
+        {
+            if (grid.GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
+            {
+                position = grid.WorldToGridPosition(position);
+                if (position.x >= 0 && position.x <= grid.size.x && position.y >= 0 && position.y <= grid.size.y)
+                {
+                    return grid.gridPieces[(int)position.x][(int)position.y];
+                }
+            }
+
+            return null;
+        }
+
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {
             Grid grid = statedMono as Grid;

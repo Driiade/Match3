@@ -29,9 +29,9 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
 
     public T CurrentStateType { get => CurrentState != null? CurrentState.stateType : default(T) ; }
 
-    private State LastState { get; set; }
-    private State CurrentState { get; set; }
-    private State NextState { get; set; }
+    protected State LastState { get; private set; }
+    protected State CurrentState { get; private set; }
+    protected State NextState { get; private set; }
 
     private Dictionary<T, State> states = new Dictionary<T, State>();
 
