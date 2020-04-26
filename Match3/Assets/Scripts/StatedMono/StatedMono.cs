@@ -1,22 +1,7 @@
-﻿using BC_Solution;
+﻿
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-/// <summary>
-/// Used with StatedMonoSystem
-/// </summary>
-public abstract class StatedMono : MonoBehaviour
-{
-    public static Action<StatedMono> OnStartBehaviour;
-
-    public abstract bool isRunning { get; }
-    public abstract void CheckForEnteringState();
-    public abstract void CheckForNextState();
-    public abstract void UpdateBehaviour();
-}
-
 
 
 /// <summary>
@@ -24,7 +9,7 @@ public abstract class StatedMono : MonoBehaviour
 /// For this application it run in a frame dependent way. We don't need frame independent algorithm, so keep it like this to save CPU power.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
+public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where T: Enum
 {
     public abstract class State
     {
@@ -35,7 +20,13 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
         public abstract T CheckForNextState(StatedMono<T> statedMono);
     }
 
-    public override bool isRunning => CurrentState != null;
+    public bool isRunning => !isPaused && CurrentState != null;
+    public bool isPaused
+    {
+        get;
+        private set;
+    }
+
     public T CurrentStateType { get => CurrentState != null? CurrentState.stateType : default(T) ; }
 
     private State LastState { get; set; }
@@ -43,6 +34,12 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
     private State NextState { get; set; }
 
     private Dictionary<T, State> states = new Dictionary<T, State>();
+
+    void OnDestroy()
+    {
+        if(isRunning)
+            Stop();
+    }
 
     /// <summary>
     /// Add a state to FSM
@@ -70,14 +67,14 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
             CurrentState = null;
             NextState = states[startState];
 
-            OnStartBehaviour?.Invoke(this);
+            IStatedUtils.OnStartBehaviour?.Invoke(this);
         }
         else
             throw new Exception("Trying to start an already running stated behaviour, this is not allowed by design"); //Hard crash the app if you do this
     }
 
 
-    public override void CheckForNextState()
+    public void CheckForNextState()
     {
         if (CurrentState != null)
         {
@@ -89,7 +86,7 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
         }
     }
 
-    public override void CheckForEnteringState()
+    public void CheckForEnteringState()
     {
         if(NextState != CurrentState)
         {
@@ -109,7 +106,7 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
     /// <summary>
     /// Unity update call each frame
     /// </summary>
-    public override  void UpdateBehaviour()
+    public void UpdateBehaviour()
     {
         if (CurrentState != null)
         {
@@ -117,4 +114,15 @@ public class StatedMono<T> : StatedMono, IEnumStateProvider<T> where T: Enum
         }
     }
 
+    public void Pause()
+    {
+        isPaused = true;
+        IStatedUtils.OnPauseBehaviour?.Invoke(this);
+    }
+
+    public void Stop()
+    {
+        CurrentState = null;
+        IStatedUtils.OnStopBehaviour?.Invoke(this);
+    }
 }

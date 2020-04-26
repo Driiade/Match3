@@ -1,7 +1,7 @@
 ﻿using BC_Solution;
 using UnityEngine;
 
-public partial class Player : StatedMono<PlayerStateEnum>, IAwakable, IStartable
+public partial class Player : StatedMono<PlayerStateEnum>, IAwakable, IStartable, IPausable
 {
     [SerializeField]
     FrameDataBufferMono frameDataBuffer;

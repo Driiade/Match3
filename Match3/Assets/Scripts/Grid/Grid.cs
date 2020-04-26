@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Represent the grid where piece are
 /// </summary>
-public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IStartable
+public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IStartable, IPausable
 {
     /// <summary>
     /// Data structure to easily add Gems

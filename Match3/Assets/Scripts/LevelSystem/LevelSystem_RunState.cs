@@ -5,8 +5,14 @@ public partial class LevelSystem
 {
     public class RunState : State
     {
+
+        private Timer timer;
+
         public override LevelStateEnum CheckForNextState(StatedMono<LevelStateEnum> statedMono)
         {
+            if (timer.GetRemainingTime() <= 0)
+                return LevelStateEnum.END;
+
             return this.stateType;
         }
 
@@ -14,14 +20,16 @@ public partial class LevelSystem
         {
             ServiceProvider.GetService<AutoScriptFlowSystem>().autoIStart = true;
 
-            ServiceProvider.GetService<Grid>().Generate(((LevelSystem)statedMono).gridSize);
-
             IStartable[] startables = GameObjectExtensions.FindObjectsOfTypeAll<IStartable>(true);
 
             for (int i = 0; i < startables.Length; i++)
             {
                 startables[i].IStart(); //Awake all entities in the level
             }
+
+            ServiceProvider.GetService<Grid>().Generate(((LevelSystem)statedMono).gridSize);
+            timer = ServiceProvider.GetService<Timer>();
+            timer.maxAllowedTime = 60f;
 
         }
 

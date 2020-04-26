@@ -37,6 +37,8 @@ public partial class Grid
 
             if(pieceToDestroy.Count >= 5)
                 ServiceProvider.GetService<SFXSystem>().PlaySFX(grid.comboAudioClip);
+
+            ServiceProvider.GetService<ScoreSystem>().AddScore(pieceToDestroy.Count);
         }
 
         public override void OnExit(StatedMono<GridStateEnum> statedMono)
