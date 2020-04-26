@@ -4,12 +4,23 @@ using UnityEngine;
 
 public partial class Grid
 {
-    public class PieceBeingDraggedState : State
+    public class PieceBeingDraggedState : State, IPieceGiver
     {
 
         Piece draggedPiece;
         List<Vector2> highlightList = new List<Vector2>();
         Vector2? lastGridViewHover = null;
+
+        public Piece AskForAPiece(Grid grid, Vector2 position)
+        {
+            position = grid.WorldToGridPosition(position);
+            if (position.x >= 0 && position.x <= grid.size.x && position.y >= 0 && position.y <= grid.size.y)
+            {
+                return grid.gridPieces[(int)position.x][(int)position.y];
+            }
+
+            return null;
+        }
 
         public override GridStateEnum CheckForNextState(StatedMono<GridStateEnum> statedMono)
         {

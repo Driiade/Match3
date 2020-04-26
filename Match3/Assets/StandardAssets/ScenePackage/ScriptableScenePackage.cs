@@ -61,14 +61,10 @@ namespace BC_Solution
 
         public IEnumerator LoadScenePackageCoroutine(IEnumerator beforeRemovingSceneEnumerator = null, IEnumerator beforeActivatingSceneEnumerator = null, string[] notUnloadedScene = null, bool removeUnecessaryScene = true)
         {
-            yield return null; //Wait beginning of the frame
             List<AsyncOperation> asyncAddSceneOperations = new List<AsyncOperation>();
             List<AsyncOperation> asyncDelSceneOperations = new List<AsyncOperation>();
 
-            if (beforeRemovingSceneEnumerator != null)
-            {
-                yield return beforeRemovingSceneEnumerator;
-            }
+            yield return beforeRemovingSceneEnumerator;
 
             if (removeUnecessaryScene)
                 RemoveUnecessaryScenes(asyncDelSceneOperations, notUnloadedScene);

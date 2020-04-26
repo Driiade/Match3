@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Represent the grid where piece are
 /// </summary>
-public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IStartable, IPausable
+public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IPausable
 {
     /// <summary>
     /// Interface to specify state can give a piece
@@ -98,12 +98,6 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
         //
     }
 
-    public void IStart()
-    {
-        StartBehaviour(GridStateEnum.GENERATING_PIECES);
-    }
-
-
     /// <summary>
     /// Generate a Random grid of pieces
     /// </summary>
@@ -124,6 +118,7 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
         gridPieces[i][j] = p;
         p.gameObject.SetActive(false);
         p.PhysicsPosition = new Vector2(i, j);
+        p.StartBehaviour(PieceStateEnum.WAITING_FOR_INPUT);
         return p;
     }
 

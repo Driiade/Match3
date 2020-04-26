@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Represent a piece on the grid
 /// </summary>
-public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IStartable, IAwakable
+public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IAwakable
 {
     [SerializeField]
     private PieceTypeEnum pieceType;
@@ -42,11 +42,6 @@ public partial class Piece : StatedMono<PieceStateEnum>, IPositionProvider3D, IS
         Add(PieceStateEnum.WAITING_FOR_INPUT, new WaitingForInputState());
         Add(PieceStateEnum.DRAGGED, new DraggedState());
         Add(PieceStateEnum.BEING_DESTROYED, new BeingDestroyedState());
-    }
-
-    public void IStart()
-    {
-        StartBehaviour(PieceStateEnum.WAITING_FOR_INPUT);
     }
 
     public void Select()

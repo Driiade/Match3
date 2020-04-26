@@ -11,7 +11,10 @@ public class StatedMonoSystem : MonoSystem<IStated>
 
     public override void OnRemoveEntities()
     {
-        //Will see later
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entitiesToAdd.Remove(entities[i]);
+        }
     }
 
     protected override void Awake()
@@ -21,6 +24,13 @@ public class StatedMonoSystem : MonoSystem<IStated>
         IStatedUtils.OnStartBehaviour += AddEntity;
         IStatedUtils.OnPauseBehaviour += RemoveEntity;
         IStatedUtils.OnStopBehaviour += RemoveEntity;
+    }
+
+    private void OnDestroy()
+    {
+        IStatedUtils.OnStartBehaviour -= AddEntity;
+        IStatedUtils.OnPauseBehaviour -= RemoveEntity;
+        IStatedUtils.OnStopBehaviour -= RemoveEntity;
     }
 
 
@@ -35,7 +45,8 @@ public class StatedMonoSystem : MonoSystem<IStated>
 
         for (int i = 0; i < entitiesToAdd.Count; i++)
         {
-            entities.Add(entitiesToAdd[i]);
+            if(!entities.Contains(entitiesToAdd[i]))
+                entities.Add(entitiesToAdd[i]);
         }
 
         entitiesToAdd.Clear();

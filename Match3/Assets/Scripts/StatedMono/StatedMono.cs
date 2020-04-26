@@ -38,7 +38,7 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
     void OnDestroy()
     {
         if(isRunning)
-            Stop();
+            StopBehaviour();
     }
 
     /// <summary>
@@ -120,9 +120,9 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
         IStatedUtils.OnPauseBehaviour?.Invoke(this);
     }
 
-    public void Stop()
+    public void StopBehaviour()
     {
-        CurrentState = null;
+        NextState = null;
         IStatedUtils.OnStopBehaviour?.Invoke(this);
     }
 }

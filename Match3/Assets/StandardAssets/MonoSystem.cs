@@ -63,6 +63,7 @@ namespace BC_Solution
 
         private void RemoveEntities(Scene scene)
         {
+            List<T> previousEntities = new List<T>(entities); //Can't check what is destroyed or not with Unity
             entities.Clear();
 
             for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -74,7 +75,8 @@ namespace BC_Solution
 
                     for (int k = 0; k < scripts.Length; k++)
                     {
-                        AddEntity(scripts[k]);
+                        if(previousEntities.Contains(scripts[k]))
+                            AddEntity(scripts[k]);
                     }
                 }
             }

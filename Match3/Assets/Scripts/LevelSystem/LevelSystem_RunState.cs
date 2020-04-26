@@ -27,7 +27,9 @@ public partial class LevelSystem
                 startables[i].IStart(); //Awake all entities in the level
             }
 
-            ServiceProvider.GetService<Grid>().Generate(((LevelSystem)statedMono).gridSize);
+            Grid grid = ServiceProvider.GetService<Grid>();
+            grid.StartBehaviour(GridStateEnum.GENERATING_PIECES);
+            grid.Generate(((LevelSystem)statedMono).gridSize);
             timer = ServiceProvider.GetService<Timer>();
             timer.maxAllowedTime = 60f;
 

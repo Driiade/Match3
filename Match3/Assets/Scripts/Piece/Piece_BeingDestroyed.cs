@@ -27,6 +27,7 @@ public partial class Piece : StatedMono<PieceStateEnum>
         public override void OnExit(StatedMono<PieceStateEnum> statedMono)
         {
             Piece piece = statedMono as Piece;
+            piece.StopBehaviour();
             piece.pooledElement.Pool();
         }
 
