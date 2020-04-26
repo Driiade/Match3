@@ -8,11 +8,11 @@ using UnityEngine;
 public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvider3D, IStartable, IPausable
 {
     /// <summary>
-    /// Specific Grid state which you can ask informaiton from
+    /// Interface to specify state can give a piece
     /// </summary>
-    public abstract class GridState : State
+    public interface IPieceGiver 
     {
-        public abstract Piece AskForAPiece(Grid grid, Vector2 position);
+        Piece AskForAPiece(Grid grid, Vector2 position);
     }
 
     /// <summary>
@@ -226,8 +226,8 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     /// <returns></returns>
     public Piece AskForAPiece(Vector2 position)
     {
-        if (CurrentState != null && CurrentState is GridState)
-            return ((GridState)CurrentState).AskForAPiece(this, position);
+        if (CurrentState != null && CurrentState is IPieceGiver)
+            return ((IPieceGiver)CurrentState).AskForAPiece(this, position);
         else
             return null;
     }

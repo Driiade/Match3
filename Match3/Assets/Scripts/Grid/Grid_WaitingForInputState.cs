@@ -4,9 +4,9 @@ using UnityEngine;
 
 public partial class Grid
 {
-    public class WaitingForInputState : GridState
+    public class WaitingForInputState : State, IPieceGiver
     {
-        public override Piece AskForAPiece(Grid grid, Vector2 position)
+        public Piece AskForAPiece(Grid grid, Vector2 position)
         {
             if (grid.GetFirstPiecesConnection(3) == null) //The only state where nothing is done, and all piece are in place
             {
