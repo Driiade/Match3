@@ -20,7 +20,10 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
         public abstract T CheckForNextState(StatedMono<T> statedMono);
     }
 
-    public bool isRunning => !isPaused && CurrentState != null;
+
+    private bool forceStop = false;
+
+    public bool isRunning => !isPaused && (CurrentState != null || NextState != null);
     public bool isPaused
     {
         get;
@@ -61,12 +64,11 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
 
     public void StartBehaviour(T startState)
     {
-        if (CurrentState == null)
+        if (!isRunning)
         {
+            forceStop = false;
             LastState = null;
-            CurrentState = null;
             NextState = states[startState];
-
             IStatedUtils.OnStartBehaviour?.Invoke(this);
         }
         else
@@ -78,10 +80,18 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
     {
         if (CurrentState != null)
         {
-            NextState = states[CurrentState.CheckForNextState(this)];
-            if (NextState != CurrentState)
+            if (forceStop)
             {
                 CurrentState.OnExit(this);
+                CurrentState = null;
+            }
+            else
+            {
+                NextState = states[CurrentState.CheckForNextState(this)];
+                if (NextState != CurrentState)
+                {
+                    CurrentState.OnExit(this);
+                }
             }
         }
     }
@@ -122,6 +132,7 @@ public class StatedMono<T> : MonoBehaviour, IStated, IEnumStateProvider<T> where
 
     public void StopBehaviour()
     {
+        forceStop = true;
         NextState = null;
         IStatedUtils.OnStopBehaviour?.Invoke(this);
     }

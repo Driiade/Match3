@@ -37,7 +37,8 @@ public class ScoreView : MonoBehaviour, IAwakable, IStartable
 
     void OnDestroy()
     {
-        scoreSystem.OnAddScore -= UpdateView;
+        if(scoreSystem)
+            scoreSystem.OnAddScore -= UpdateView;
     }
 
     void Update()

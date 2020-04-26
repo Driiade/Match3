@@ -7,7 +7,6 @@ using System.Collections.Generic;
 public class StatedMonoSystem : MonoSystem<IStated>
 {
     List<IStated> entitiesToAdd = new List<IStated>();
-    List<IStated> entitiesToRemove = new List<IStated>();
 
     public override void OnRemoveEntities()
     {
@@ -36,13 +35,6 @@ public class StatedMonoSystem : MonoSystem<IStated>
 
     private void Update()
     {
-        for (int i = 0; i < entitiesToRemove.Count; i++)
-        {
-            entities.Remove(entitiesToRemove[i]);
-        }
-
-        entitiesToRemove.Clear();
-
         for (int i = 0; i < entitiesToAdd.Count; i++)
         {
             if(!entities.Contains(entitiesToAdd[i]))
@@ -54,6 +46,14 @@ public class StatedMonoSystem : MonoSystem<IStated>
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].CheckForNextState();
+        }
+
+        for (int i = entities.Count-1; i >=0 ; i--)
+        {
+            if (!entities[i].isRunning)
+            {
+                entities.RemoveAt(i);
+            }
         }
 
         for (int i = 0; i < entities.Count; i++)
@@ -78,8 +78,6 @@ public class StatedMonoSystem : MonoSystem<IStated>
 
     public override void AddEntity(IStated entity)
     {
-        entitiesToRemove.Remove(entity);
-
         if (!entitiesToAdd.Contains(entity))
             entitiesToAdd.Add(entity);
     }
@@ -87,8 +85,6 @@ public class StatedMonoSystem : MonoSystem<IStated>
     public override void RemoveEntity(IStated entity)
     {
         entitiesToAdd.Remove(entity);
-        if (!entitiesToRemove.Contains(entity))
-            entitiesToRemove.Add(entity);
     }
 
 }
