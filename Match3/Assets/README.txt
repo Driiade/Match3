@@ -38,11 +38,15 @@ GameDesign:
 	-Grid reçoit la demande de changement et accepte ou non de la faire. Ainsi interchanger 2 pièces ne créant pas de connexion n'est pas permis par Grid. Mais ça pourrait être le cas sans que Player soit affecté.
 	-Grid ensuite élimine si possible les Pieces.
 
+	-La première connexion créée par le joueur en déplaçant une Piece est pris en compte en premier, indépendemment de l'algorithm de la grille. 
+	J'ai laissé la possibilité au joueur de choisir ce qui devait être détruit en premier pour qu'il ai une certaine liberté stratégique.
+
 Polish:
 	-J'ai intégré tous les sons. Le sons de combo ne se déclenche que dans le cas où une connexion de plus de 4 Pieces est éliminée.
 	-VFX pour l'élimination des Pieces.
 	-Timer pour donner un but au joueur.
 	-ScoreSystem: Grid transmet les Pieces éliminés au ScoreSystem. Celui si ajoute +1 de score pour chaque Pieces éliminés, Il ajoute +1 point pour chaque Pieces faisant une connexion de plus de 4 Pieces. 
+	Il y a un systeme de combo qui ajoute un multiplicateur à chaque combo.
 	Le score s'enregistre sur un fichier via un outils précédemment créé.
 	-Popup de fin de jeu avec score + meilleur score.
 

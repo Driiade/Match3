@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SpriteAtlas_Gems
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 14faaba635541ac4ca906ea3886149f6, type: 3}
+    totalSpriteSurfaceArea: 20480
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: d4a211010746cec4fa90490408c2d7a1, type: 3}
+  - {fileID: 21300000, guid: 6d803952fe84bb548a4d0c6f4b253b99, type: 3}
+  - {fileID: 21300000, guid: b7366c63f42eb1044966221201095849, type: 3}
+  - {fileID: 21300000, guid: c51eb9e5ca23f4844b9b500e4d6e76e2, type: 3}
+  - {fileID: 21300000, guid: 6b16fead9d97b3e468504bebab731e34, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - gem3
+  - gem1
+  - gem2
+  - gem5
+  - gem4
+  m_Tag: SpriteAtlas_Gems
+  m_IsVariant: 0
