@@ -38,7 +38,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 432b23c08a274bf42916f8e9ce822065, type: 3}
   - {fileID: 21300000, guid: 090bd37a93ad79947a400e391e146a06, type: 3}
   m_PackedSpriteNamesToIndex:
-  - ShiroGames
-  - WhiteSquare
+  - Sprite_ShiroGames
+  - Sprite_WhiteSquare
   m_Tag: SpriteAtlas_Logo
   m_IsVariant: 0
