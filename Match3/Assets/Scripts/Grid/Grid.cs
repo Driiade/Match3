@@ -57,7 +57,7 @@ public partial class Grid : StatedMono<GridStateEnum>, IAwakable, IPositionProvi
     [SerializeField]
     AudioClip comboAudioClip;
 
-    private Vector2 size;
+    private Vector2 size = new Vector2(8,8);
     public Vector2 Size
     {
         get => size;

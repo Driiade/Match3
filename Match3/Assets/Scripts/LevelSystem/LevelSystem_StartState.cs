@@ -1,7 +1,6 @@
 ﻿using BC_Solution;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class LevelSystem
 {
@@ -12,7 +11,7 @@ public partial class LevelSystem
 
         public override LevelStateEnum CheckForNextState(StatedMono<LevelStateEnum> statedMono)
         {
-            if (timer != -1 && ((LevelSystem)statedMono).clock.CurrentRenderTime > timer)
+            if (timer != -1 && ((LevelSystem)statedMono).clock.CurrentRenderTime > timer && waitCoroutine == null)
             {
                 return (LevelStateEnum.RUN);
             }
@@ -44,7 +43,7 @@ public partial class LevelSystem
                     awakables[i].IAwake(); //Awake all entities in the level
                 }
 
-                timer = ((LevelSystem)statedMono).clock.CurrentRenderTime + 0.5f;
+                timer = ((LevelSystem)statedMono).clock.CurrentRenderTime + 1.5f;
             }
         }
 
