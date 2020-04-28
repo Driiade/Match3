@@ -44,10 +44,11 @@ public partial class Grid
 
                     for (int j = 0; j <= keepPieceY; j++) //Place kept pieces at final position
                     {
-                        Vector3 pPosition = grid.gridPieces[i][j].PhysicsPosition;
+                        Piece p = grid.gridPieces[i][j];
+                        Vector3 pPosition = p.PhysicsPosition;
                         pPosition.y += missingCount;
-                        grid.gridPieces[i][j].PhysicsPosition = pPosition;
-                        piecesToMove.Add(grid.gridPieces[i][j]);
+                        p.PhysicsPosition = pPosition;
+                        piecesToMove.Add(p);
                     }
 
                     for (int j = maxY; j > missingCount -1; j--)
