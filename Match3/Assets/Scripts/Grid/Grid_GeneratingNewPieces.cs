@@ -36,20 +36,31 @@ public partial class Grid
             for (int i = 0; i < missingPiecePerColumn.Length; i++)  //Just place them in the right place in the array. View position will be placed later.
             {
                 int maxY = maxYPerColumn[i];
-                for (int k = 0; k < missingPiecePerColumn[i]; k++)
+                int missingCount = missingPiecePerColumn[i];
+
+                if (missingCount > 0)
                 {
-                    for (int j = maxY; j >= 1; j--)
+                    int keepPieceY = maxY - missingCount;
+
+                    for (int j = 0; j <= keepPieceY; j++) //Place kept pieces at final position
                     {
-                        grid.InterChange(grid.gridPieces[i][j - 1], grid.gridPieces[i][j]);
+                        Vector3 pPosition = grid.gridPieces[i][j].PhysicsPosition;
+                        pPosition.y += missingCount;
+                        grid.gridPieces[i][j].PhysicsPosition = pPosition;
+                        piecesToMove.Add(grid.gridPieces[i][j]);
                     }
 
-                    Piece p = grid.Populate(i, 0);
-                    p.ViewPosition = new Vector2(i, (k + 1));
-                }
+                    for (int j = maxY; j > missingCount -1; j--)
+                    {
+                        grid.gridPieces[i][j] = grid.gridPieces[i][j - missingCount]; //Interchange
+                    }
 
-                for (int j = 0; j < maxYPerColumn[i] + 1; j++)
-                {
-                    piecesToMove.Add(grid.gridPieces[i][j]);
+                    for (int j = 0; j < missingCount; j++) //Populate missing pieces
+                    {
+                        Piece p = grid.Populate(i, j);
+                        p.ViewPosition = new Vector2(i, -j + missingCount);
+                        piecesToMove.Add(grid.gridPieces[i][j]);
+                    }
                 }
             }
 
